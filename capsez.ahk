@@ -1281,6 +1281,9 @@ MouseIsOver(WinTitle) {
 
 ;************** 启动程序 ************** {{{1
 ;************** 记事本 ************** {{{2
+#h::run, cmd
+;管理员权限cmd
+^#h::run, *RunAs cmd
 #c::run %COMMANDER_PATH%\Tools\notepad\Notepad.exe /c
 
 ;启动记事本并去标题等 {{{3
