@@ -1,12 +1,13 @@
-;CapsLockå¢å¼ºè„šæœ¬ï¼Œä¾‹å­
+;CapsLockÔöÇ¿½Å±¾£¬Àı×Ó
 ;by Ez
-;v190721 æ·»åŠ åœ¨tcé‡Œé¢ä¸­é”®ç‚¹å‡»æ‰“å¼€ç›®å½•
-;v190904 æ›´æ–°æš‚åœç­‰çƒ­é”®ï¼Œç›´æ¥æŠŠAutoHotkey.exeæ”¹åä¸ºcapsez.exe
-;v190916 æ·»åŠ å‡ ç§æ¨¡å¼çš„å¼€å…³ï¼Œè§£å†³BUG10ä»»åŠ¡æ æ— æ³•åˆ‡æ¢
-;v190927 æ·»åŠ å¿«æ·é”®åœ¨TCä¸­æ‰“å¼€èµ„æºç®¡ç†å™¨ä¸­é€‰ä¸­çš„æ–‡ä»¶ï¼Œæ·»åŠ åœ¨tcä¸­åŒå‡»å³é”®è¿”å›ä¸Šä¸€çº§ã€‚è‡ªåŠ¨è·å–TCè·¯å¾„
-;v191214 æ·»åŠ åª’ä½“æ’­æ”¾ç›¸å…³å¿«æ·é”®å’Œå³é”®æ‹–åŠ¨çª—å£ï¼Œè§£å†³ä¸€ç‚¹å°é—®é¢˜å’Œå°ç»†èŠ‚
+;v190721 Ìí¼ÓÔÚtcÀïÃæÖĞ¼üµã»÷´ò¿ªÄ¿Â¼
+;v190904 ¸üĞÂÔİÍ£µÈÈÈ¼ü£¬Ö±½Ó°ÑAutoHotkey.exe¸ÄÃûÎªcapsez.exe
+;v190916 Ìí¼Ó¼¸ÖÖÄ£Ê½µÄ¿ª¹Ø£¬½â¾öBUG10ÈÎÎñÀ¸ÎŞ·¨ÇĞ»»
+;v190927 Ìí¼Ó¿ì½İ¼üÔÚTCÖĞ´ò¿ª×ÊÔ´¹ÜÀíÆ÷ÖĞÑ¡ÖĞµÄÎÄ¼ş£¬Ìí¼ÓÔÚtcÖĞË«»÷ÓÒ¼ü·µ»ØÉÏÒ»¼¶¡£×Ô¶¯»ñÈ¡TCÂ·¾¶
+;v191214 Ìí¼ÓÃ½Ìå²¥·ÅÏà¹Ø¿ì½İ¼üºÍÓÒ¼üÍÏ¶¯´°¿Ú£¬½â¾öÒ»µãĞ¡ÎÊÌâºÍĞ¡Ï¸½Ú
+;v200108 ĞŞ¸´ÔÚ×Ê¹Ü»ò×ÀÃæÃ»Ñ¡ÎÄ¼şµÄÎÊÌâ¡£ÔÙĞŞ¸´Ò»Ğ©Ï¸½Ú
 
-;ç®¡ç†å‘˜æƒé™ä»£ç ï¼Œæ”¾åœ¨æ–‡ä»¶å¼€å¤´ {{{1
+;¹ÜÀíÔ±È¨ÏŞ´úÂë£¬·ÅÔÚÎÄ¼ş¿ªÍ· {{{1
 Loop, %0%
   {
     param := %A_Index%  ; Fetch the contents of the variable whose name is contained in A_Index.
@@ -22,12 +23,12 @@ if not A_IsAdmin
     ExitApp
 }
 
-;æ–‡ä»¶å¤´ {{{1
+;ÎÄ¼şÍ· {{{1
 ;Directives
 #WinActivateForce
 #InstallKeybdHook
 #InstallMouseHook
-#Persistent                   ;è®©è„šæœ¬æŒä¹…è¿è¡Œ(å…³é—­æˆ–ExitApp)
+#Persistent                   ;ÈÃ½Å±¾³Ö¾ÃÔËĞĞ(¹Ø±Õ»òExitApp)
 #MaxMem 4	;max memory per var use
 #NoEnv
 #SingleInstance Force
@@ -35,9 +36,9 @@ if not A_IsAdmin
 SetCapsLockState AlwaysOff
 ;SendMode InputThenPlay
 ;KeyHistory
-SetBatchLines -1                	 	;è®©è„šæœ¬æ— ä¼‘çœ åœ°æ‰§è¡Œï¼ˆæ¢å¥è¯è¯´ï¼Œä¹Ÿå°±æ˜¯è®©è„šæœ¬å…¨é€Ÿè¿è¡Œï¼‰
-SetKeyDelay -1							;è®¾ç½®æ¯æ¬¡Sendå’ŒControlSendå‘é€é”®å‡»åè‡ªåŠ¨çš„å»¶æ—¶,ä½¿ç”¨-1è¡¨ç¤ºæ— å»¶æ—¶
-Process Priority,,High           	    ;çº¿ç¨‹,ä¸»,é«˜çº§åˆ«
+SetBatchLines -1                	 	;ÈÃ½Å±¾ÎŞĞİÃßµØÖ´ĞĞ£¨»»¾ä»°Ëµ£¬Ò²¾ÍÊÇÈÃ½Å±¾È«ËÙÔËĞĞ£©
+SetKeyDelay -1							;ÉèÖÃÃ¿´ÎSendºÍControlSend·¢ËÍ¼ü»÷ºó×Ô¶¯µÄÑÓÊ±,Ê¹ÓÃ-1±íÊ¾ÎŞÑÓÊ±
+Process Priority,,High           	    ;Ïß³Ì,Ö÷,¸ß¼¶±ğ
 
 SendMode Input
 
@@ -48,7 +49,7 @@ SetWinDelay,0
 SetControlDelay,0
 
 
-;************** groupå®šä¹‰^ ************** {{{1
+;************** group¶¨Òå^ ************** {{{1
 ;GroupAdd, group_browser,ahk_class St.HDBaseWindow
 GroupAdd, group_browser,ahk_class IEFrame               ;IE
 GroupAdd, group_browser,ahk_class ApplicationFrameWindow ;Edge
@@ -64,50 +65,52 @@ GroupAdd, group_disableCtrlSpace, ahk_exe SQLiteStudio.exe
 
 GroupAdd,GroupDiagOpenAndSave,Open ahk_class #32770
 GroupAdd,GroupDiagOpenAndSave,Save As ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,å¦å­˜ä¸º ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,ä¿å­˜ ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,å¤åˆ¶ ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,æ–°å»º ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,æ‰“å¼€ ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,å›¾å½¢å¦å­˜ä¸º ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,æ–‡ä»¶æ‰“å¼€ ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,ä¿å­˜å‰¯æœ¬ ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,ä¸Šä¼  ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,é€‰æ‹©æ–‡ä»¶ ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,Áí´æÎª ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,±£´æ ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,¸´ÖÆ ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,ĞÂ½¨ ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,´ò¿ª ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,Í¼ĞÎÁí´æÎª ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,ÎÄ¼ş´ò¿ª ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,±£´æ¸±±¾ ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,ÉÏ´« ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,Ñ¡ÔñÎÄ¼ş ahk_class #32770
 
 ;GroupAdd, group_disableCtrlSpace, ahk_exe gvim.exe 
-;GroupAdd, group_disableCtrlSpace, ahk_class NotebookFrameï¼ˆæ³¨ï¼šahk_classåé¢æ˜¯AHKæ£€æµ‹å‡ºçš„mathematicaçš„classåï¼‰
+;GroupAdd, group_disableCtrlSpace, ahk_class NotebookFrame£¨×¢£ºahk_classºóÃæÊÇAHK¼ì²â³öµÄmathematicaµÄclassÃû£©
 
-;************** groupå®šä¹‰$ **************
+;************** group¶¨Òå$ **************
 
-;è®¾å®š15åˆ†é’Ÿé‡å¯ä¸€æ¬¡è„šæœ¬ï¼Œé˜²æ­¢å¡é”® 1000*60*15
+;Éè¶¨15·ÖÖÓÖØÆôÒ»´Î½Å±¾£¬·ÀÖ¹¿¨¼ü 1000*60*15
 GV_ReloadTimer := % 1000*60*15
 Gosub,AutoReloadInit
+Gosub,CreatTrayMenu
 
-;æ˜¯å¦å¯ç”¨å…‰æ ‡ä¸‹æ»šè½®
+;ÊÇ·ñÆôÓÃ¹â±êÏÂ¹öÂÖ
 GV_ToggleWheelOnCursor := 1
 
-;tabç³»åˆ—ç»„åˆé”®ï¼Œé€‚åˆå·¦é”®å³é¼ ï¼Œå¯ç”¨åç›´æ¥æŒ‰tabä¼šæ„Ÿè§‰æœ‰ä¸€ç‚¹å»¶è¿Ÿï¼Œé»˜è®¤å¼€å¯ï¼Œå¼€å…³ä¸ºctrl+win+alt+èŠ±å·
-GV_ToggleTabKeys := 0
 
-;å¯ç”¨ç©ºæ ¼ç³»åˆ—å¿«æ·é”®ï¼Œå¯ç”¨ä¼šå½±å“æ‰“å­—ï¼Œåœ¨tcä¸­ä¼šä¸èƒ½æŒ‰ä½è¿é€‰æ–‡ä»¶ï¼Œé»˜è®¤å…³é—­ï¼Œå¼€å…³ä¸ºctrl+win+alt+ç©ºæ ¼
+;tabÏµÁĞ×éºÏ¼ü£¬ÊÊºÏ×ó¼üÓÒÊó£¬ÆôÓÃºóÖ±½Ó°´tab»á¸Ğ¾õÓĞÒ»µãÑÓ³Ù£¬Ä¬ÈÏ¿ªÆô£¬¿ª¹ØÎªctrl+win+alt+»¨ºÅ
+GV_ToggleTabKeys := 1
+
+;ÆôÓÃ¿Õ¸ñÏµÁĞ¿ì½İ¼ü£¬ÆôÓÃ»áÓ°Ïì´ò×Ö£¬ÔÚtcÖĞ»á²»ÄÜ°´×¡Á¬Ñ¡ÎÄ¼ş£¬Ä¬ÈÏ¹Ø±Õ£¬¿ª¹ØÎªctrl+win+alt+¿Õ¸ñ
 GV_ToggleSpaceKeys := 0
 
-;å•é”®æ¨¡å¼ï¼Œå¼€å…³æŒ‰é”®ä¸ºcaps+/
+;µ¥¼üÄ£Ê½£¬¿ª¹Ø°´¼üÎªcaps+/
 GV_ToggleKeyMode := 0
 
-;64ä½çš„Win7ä¸‹ï¼Œåœ¨è¾“å…¥æ¡†ä¸­æ˜¯148003967
+;64Î»µÄWin7ÏÂ£¬ÔÚÊäÈë¿òÖĞÊÇ148003967
 GV_CursorInputBox_64Win7 := 148003967
 
-;å¦‚æœæ˜¯è‡ªå·±ä»tcä¸­å¯åŠ¨çš„æœ¬è„šæœ¬ï¼Œå°†ä¼šè‡ªåŠ¨å¸¦ä¸ŠCOMMANDER_PATH
-;ä½†å¦‚æœæ˜¯åˆ«çš„åœ°æ–¹ï¼Œæ¯”å¦‚æ³¨å†Œè¡¨çš„autorunç¯èŠ‚å…ˆå¯åŠ¨çš„æœ¬è„šæœ¬ï¼Œé‚£ä¹ˆå°±æœ‰å¿…è¦å…ˆè®¾ç½®è¿™ä¸ªå˜é‡
-;1ã€å…ˆå¯åŠ¨è„šæœ¬ï¼Œæ­£å¸¸æ˜¯éšç³»ç»Ÿè‡ªå¯åŠ¨ï¼Œé‚£ä¹ˆCOMMANDER_PATHä¸ºç©º
-;2ã€å†å¯åŠ¨tcï¼Œé‚£ä¹ˆCOMMANDER_PATHå˜é‡è¿˜æ˜¯ä¸ºç©ºï¼Œå¯ä»¥è¯»å–è¿è¡Œä¸­çš„exeè·¯å¾„
-;3ã€æœ€åå†æ˜¯æ ¹æ®è„šæœ¬æ‰€åœ¨ç›®å½•ä¸­æ˜¯å¦å­˜åœ¨TOTALCMD.EXEæˆ–è€…TOTALCMD64.EXE
+;Èç¹ûÊÇ×Ô¼º´ÓtcÖĞÆô¶¯µÄ±¾½Å±¾£¬½«»á×Ô¶¯´øÉÏCOMMANDER_PATH
+;µ«Èç¹ûÊÇ±ğµÄµØ·½£¬±ÈÈç×¢²á±íµÄautorun»·½ÚÏÈÆô¶¯µÄ±¾½Å±¾£¬ÄÇÃ´¾ÍÓĞ±ØÒªÏÈÉèÖÃÕâ¸ö±äÁ¿
+;1¡¢ÏÈÆô¶¯½Å±¾£¬Õı³£ÊÇËæÏµÍ³×ÔÆô¶¯£¬ÄÇÃ´COMMANDER_PATHÎª¿Õ
+;2¡¢ÔÙÆô¶¯tc£¬ÄÇÃ´COMMANDER_PATH±äÁ¿»¹ÊÇÎª¿Õ£¬¿ÉÒÔ¶ÁÈ¡ÔËĞĞÖĞµÄexeÂ·¾¶
+;3¡¢×îºóÔÙÊÇ¸ù¾İ½Å±¾ËùÔÚÄ¿Â¼ÖĞÊÇ·ñ´æÔÚTOTALCMD.EXE»òÕßTOTALCMD64.EXE
 COMMANDER_PATH := % GF_GetSysVar("COMMANDER_PATH")
 WinGet,TcExeFullPath,ProcessPath,ahk_class TTOTAL_CMD
 
-if !TcExeFullPath ;æ²¡tcåœ¨è¿è¡Œ
+if !TcExeFullPath ;Ã»tcÔÚÔËĞĞ
 {
 	if A_Is64bitOS {
 		if FileExist(A_WorkingDir . "\" . "TOTALCMD64.EXE") {
@@ -117,7 +120,7 @@ if !TcExeFullPath ;æ²¡tcåœ¨è¿è¡Œ
 			TcExeFullPath := A_WorkingDir . "\" . "TOTALCMD.EXE"
 			EnvSet,COMMANDER_PATH, A_WorkingDir
 		} else{
-			toolTip å½“å‰ç›®å½•ä¸‹æ²¡Totalcmdç¨‹åº
+			toolTip µ±Ç°Ä¿Â¼ÏÂÃ»Totalcmd³ÌĞò
 			sleep 2000
 			tooltip
 		}
@@ -127,14 +130,14 @@ if !TcExeFullPath ;æ²¡tcåœ¨è¿è¡Œ
 			TcExeFullPath := A_WorkingDir . "\" . "TOTALCMD.EXE"
 			EnvSet,COMMANDER_PATH, A_WorkingDir
 		} else {
-			toolTip å½“å‰ç›®å½•ä¸‹æ²¡Totalcmdç¨‹åº
+			toolTip µ±Ç°Ä¿Â¼ÏÂÃ»Totalcmd³ÌĞò
 			sleep 2000
 			tooltip
 		}
 	}
 }
-else{ ;æœ‰tcåœ¨è¿è¡Œ
-	if !COMMANDER_PATH  ;ä½†è„šæœ¬å…ˆå¯åŠ¨ï¼Œæ¯”å¦‚éšç³»ç»Ÿè‡ªå¯åŠ¨ï¼Œæ‰€ä»¥å¹¶æ²¡æœ‰COMMANDER_PATHå˜é‡
+else{ ;ÓĞtcÔÚÔËĞĞ
+	if !COMMANDER_PATH  ;µ«½Å±¾ÏÈÆô¶¯£¬±ÈÈçËæÏµÍ³×ÔÆô¶¯£¬ËùÒÔ²¢Ã»ÓĞCOMMANDER_PATH±äÁ¿
 	{
 		WinGet,TcExeName,ProcessName,ahk_class TTOTAL_CMD
 		StringTrimRight, COMMANDER_PATH, TcExeFullPath, StrLen(TcExeName)+1
@@ -147,7 +150,7 @@ else{ ;æœ‰tcåœ¨è¿è¡Œ
 GV_TempPath := % GF_GetSysVar("TEMP")
 
 
-;é»˜è®¤åŒå‡»å¿«æ·é”®é—´éš”175å¾®ç§’
+;Ä¬ÈÏË«»÷¿ì½İ¼ü¼ä¸ô175Î¢Ãë
 GV_KeyTimer := 175
 GV_MouseTimer := 400
 GV_KeyClickAction1 :=
@@ -166,7 +169,7 @@ CM_ConfigSaveDirHistory := 582
 
 ScreenShotPath := "C:\"
 
-;Timä¸­åº§æ ‡ä½ç½®
+;TimÖĞ×ù±êÎ»ÖÃ
 Tim_Start_X := 100
 Tim_Start_Y := 100
 Tim_Bar_Height := 60 
@@ -180,13 +183,14 @@ TG_Start_Y := 110
 TG_Bar_Height := 62 
 
 
-;ç”¨ramdiskçš„æ—¶å€™ï¼Œæœ‰æ—¶å€™ä¸èƒ½è‡ªåŠ¨çš„å»ºç«‹Tempç›®å½•
+;ÓÃramdiskµÄÊ±ºò£¬ÓĞÊ±ºò²»ÄÜ×Ô¶¯µÄ½¨Á¢TempÄ¿Â¼
 ;FileDelete,% GV_TempPath
 ;FileCreateDir, % GV_TempPath
 ;run nircmd execmd mkdir "%GV_TempPath%"
 ;FileCreateDir, % GV_TempPath . "\ChromeCache"
 
-;************** åœ¨å…‰æ ‡ä¸‹æ–¹æ»šè½® ************** {{{1
+
+;************** ÔÚ¹â±êÏÂ·½¹öÂÖ ************** {{{1
 ;Autoexecute code
 MinLinesPerNotch := 1
 MaxLinesPerNotch := 5
@@ -194,7 +198,7 @@ AccelerationThreshold := 100
 AccelerationType := "L" ;Change to "P" for parabolic acceleration
 StutterThreshold := 10
 
-;************** åœ¨å…‰æ ‡ä¸‹æ–¹æ»šè½®å¼€å§‹^ ************** {{{2
+;************** ÔÚ¹â±êÏÂ·½¹öÂÖ¿ªÊ¼^ ************** {{{2
 ;Function definitions
 ;See above for details on parameters
 FocuslessScroll(MinLinesPerNotch, MaxLinesPerNotch, AccelerationThreshold, AccelerationType, StutterThreshold)
@@ -269,13 +273,13 @@ LinesPerNotch(MinLinesPerNotch, MaxLinesPerNotch, AccelerationThreshold, Acceler
 	Return Lines
 }
 
-;åœ¨ä»»åŠ¡æ ä¸Šæ»šè½®è°ƒæ•´éŸ³é‡
+;ÔÚÈÎÎñÀ¸ÉÏ¹öÂÖµ÷ÕûÒôÁ¿
 #If MouseIsOver("ahk_class Shell_TrayWnd")
 WheelUp::Send {Volume_Up}
 WheelDown::Send {Volume_Down}
 #If
+;Win10ÀïÃæÒÑ¾­²»ĞèÒª¹â±êÏÂ¹öÂÖÕâ¸ö¹¦ÄÜ
 
-;Win10é‡Œé¢å·²ç»ä¸éœ€è¦å…‰æ ‡ä¸‹æ»šè½®è¿™ä¸ªåŠŸèƒ½
 #If GV_ToggleWheelOnCursor=1
 	WheelUp::
 		if A_OSVersion in WIN_2003,WIN_XP,WIN_7
@@ -317,9 +321,10 @@ WheelDown::Send {Volume_Down}
 		}
 	return
 #if
-;************** åœ¨å…‰æ ‡ä¸‹æ–¹æ»šè½®ç»“æŸ ************** {{{2
 
-;************** å®šæ—¶é‡å¯è„šæœ¬éƒ¨åˆ†ï¼Œåˆ«åŠ¨ä½ç½® ************** {{{1
+;************** ÔÚ¹â±êÏÂ·½¹öÂÖ½áÊø ************** {{{2
+
+;************** ¶¨Ê±ÖØÆô½Å±¾²¿·Ö£¬±ğ¶¯Î»ÖÃ ************** {{{1
 AutoReloadInit:
 	SetTimer, SelfReload, % GV_ReloadTimer
 return
@@ -327,44 +332,44 @@ SelfReload:
 	reload
 return
 
-;************** caps+é¼ æ ‡æ»šè½®è°ƒæ•´çª—å£é€æ˜åº¦^    ************** {{{1
-;caps+é¼ æ ‡æ»šè½®è°ƒæ•´çª—å£é€æ˜åº¦ï¼ˆè®¾ç½®30-255çš„é€æ˜åº¦ï¼Œä½äº30åŸºæœ¬ä¸Šå°±çœ‹ä¸è§äº†ï¼Œå¦‚éœ€è¦å¯è‡ªè¡Œä¿®æ”¹ï¼‰
+;************** caps+Êó±ê¹öÂÖµ÷Õû´°¿ÚÍ¸Ã÷¶È^    ************** {{{1
+;caps+Êó±ê¹öÂÖµ÷Õû´°¿ÚÍ¸Ã÷¶È£¨ÉèÖÃ30-255µÄÍ¸Ã÷¶È£¬µÍÓÚ30»ù±¾ÉÏ¾Í¿´²»¼ûÁË£¬ÈçĞèÒª¿É×ÔĞĞĞŞ¸Ä£©
 ;~LShift & WheelUp::
 CapsLock & WheelUp::
-; é€æ˜åº¦è°ƒæ•´ï¼Œå¢åŠ ã€‚
+; Í¸Ã÷¶Èµ÷Õû£¬Ôö¼Ó¡£
 	WinGet, Transparent, Transparent,A
 	If (Transparent="")
 		Transparent=255
 		;Transparent_New:=Transparent+10
-	Transparent_New:=Transparent+20    ;â—†é€æ˜åº¦å¢åŠ é€Ÿåº¦ã€‚
+	Transparent_New:=Transparent+20    ;¡ôÍ¸Ã÷¶ÈÔö¼ÓËÙ¶È¡£
 	If (Transparent_New > 254)
 		Transparent_New =255
 	WinSet,Transparent,%Transparent_New%,A
 
-	tooltip åŸé€æ˜åº¦: %Transparent_New% `næ–°é€æ˜åº¦: %Transparent%
-	;æŸ¥çœ‹å½“å‰é€æ˜åº¦ï¼ˆæ“ä½œä¹‹åçš„ï¼‰ã€‚
+	tooltip Ô­Í¸Ã÷¶È: %Transparent_New% `nĞÂÍ¸Ã÷¶È: %Transparent%
+	;²é¿´µ±Ç°Í¸Ã÷¶È£¨²Ù×÷Ö®ºóµÄ£©¡£
 	SetTimer, RemoveToolTip_transparent_Lwin, 1500
 return
 
 CapsLock & WheelDown::
-	;é€æ˜åº¦è°ƒæ•´ï¼Œå‡å°‘ã€‚
+	;Í¸Ã÷¶Èµ÷Õû£¬¼õÉÙ¡£
 	WinGet, Transparent, Transparent,A
 	If (Transparent="")
 		Transparent=255
-	Transparent_New:=Transparent-10  ;â—†é€æ˜åº¦å‡å°‘é€Ÿåº¦ã€‚
+	Transparent_New:=Transparent-10  ;¡ôÍ¸Ã÷¶È¼õÉÙËÙ¶È¡£
 	;msgbox,Transparent_New=%Transparent_New%
-	If (Transparent_New < 30)    ;â—†æœ€å°é€æ˜åº¦é™åˆ¶ã€‚
+	If (Transparent_New < 30)    ;¡ô×îĞ¡Í¸Ã÷¶ÈÏŞÖÆ¡£
 		Transparent_New = 30
 	WinSet,Transparent,%Transparent_New%,A
-	tooltip åŸé€æ˜åº¦: %Transparent_New% `næ–°é€æ˜åº¦: %Transparent%
+	tooltip Ô­Í¸Ã÷¶È: %Transparent_New% `nĞÂÍ¸Ã÷¶È: %Transparent%
 	SetTimer, RemoveToolTip_transparent_Lwin, 1500
 return
 
-;è®¾ç½®CapsLock åŠ ä¾§è¾¹é”® ç›´æ¥æ¢å¤é€æ˜åº¦åˆ°255ã€‚æ²¡æœ‰ä¾§è¾¹é”®çš„å°±ç®—äº†ï¼Œæ¯•ç«Ÿæ»šè½®æ»šä¸€ä¸‹ä¹Ÿå¿«å¾—å¾ˆ
+;ÉèÖÃCapsLock ¼Ó²à±ß¼ü Ö±½Ó»Ö¸´Í¸Ã÷¶Èµ½255¡£Ã»ÓĞ²à±ß¼üµÄ¾ÍËãÁË£¬±Ï¾¹¹öÂÖ¹öÒ»ÏÂÒ²¿ìµÃºÜ
 ;CapsLock & XButton1::
 	;WinGet, Transparent, Transparent,A
 	;WinSet,Transparent,255,A
-	;tooltip æ¢å¤é€æ˜åº¦
+	;tooltip »Ö¸´Í¸Ã÷¶È
 	;SetTimer, RemoveToolTip_transparent_Lwin, 1500
 ;return
 
@@ -373,11 +378,11 @@ RemoveToolTip_transparent_Lwin:
 	SetTimer, RemoveToolTip_transparent_Lwin, Off
 return
 
-;************caps+é¼ æ ‡æ»šè½®è°ƒæ•´çª—å£é€æ˜åº¦$***********
+;************caps+Êó±ê¹öÂÖµ÷Õû´°¿ÚÍ¸Ã÷¶È$***********
 
 
-;************** æŒ‰ä½Capsæ‹–åŠ¨é¼ æ ‡^    ************** {{{1
-;æŒ‰ä½capsåŠ å·¦é”®æ‹–åŠ¨çª—å£
+;************** °´×¡CapsÍÏ¶¯Êó±ê^    ************** {{{1
+;°´×¡caps¼Ó×ó¼üÍÏ¶¯´°¿Ú
 Capslock & LButton::
 Escape & LButton::
 	CoordMode, Mouse  ; Switch to screen/absolute coordinates.
@@ -413,7 +418,7 @@ EWD_WatchMouse:
 	EWD_MouseStartY := EWD_MouseY
 return
 
-;æŒ‰ä½capsåŠ å³é”®æ”¾å¤§å’Œç¼©å°çª—å£
+;°´×¡caps¼ÓÓÒ¼ü·Å´óºÍËõĞ¡´°¿Ú
 Capslock & RButton::
 Escape & RButton::
 	CoordMode, Mouse, Screen ; Switch to screen/absolute coordinates.
@@ -436,30 +441,30 @@ EWD_ResizeWindow:
 	SetWinDelay, -1   ; Makes the below move faster/smoother.
 	WinMove, ahk_id %EWD_MouseWin%,, EWD_OriginalPosX, EWD_OriginalPosY, EWD_StartPosX + EWD_MouseX, EWD_StartPosY + EWD_MouseY
 Return
-;************** æŒ‰ä½Capsæ‹–åŠ¨çª—å£$    **************
+;************** °´×¡CapsÍÏ¶¯´°¿Ú$    **************
 
-;æŒ‰ä½WinåŠ å·¦é”®æ”¾å¤§å’Œç¼©å°çª—å£
+;°´×¡Win¼Ó×ó¼ü·Å´óºÍËõĞ¡´°¿Ú
 Capslock & MButton::GoSub,Sub_MaxRestore
 LWin & LButton::GoSub,Sub_MaxRestore
-;WinåŠ å³é”®ç»™äº†popselä½œä¸ºå¯åŠ¨å™¨ï¼Œå…³é”®æ˜¯æ»¥ç”¨ç½®é¡¶å¹¶ä¸å¥½ï¼Œæ‰€ä»¥ç»™éš¾å—çš„ä¸­é”®
+;Win¼ÓÓÒ¼ü¸øÁËpopsel×÷ÎªÆô¶¯Æ÷£¬¹Ø¼üÊÇÀÄÓÃÖÃ¶¥²¢²»ºÃ£¬ËùÒÔ¸øÄÑÊÜµÄÖĞ¼ü
 LWin & MButton::Winset, Alwaysontop, toggle, A
-;å¯¹äºç½®é¡¶æœ€å¥½ç”¨å¿«æ·é”®æ¥çš„æ›´å‡†ç¡®ä¸€ç‚¹ Win+A(AlwaysTop)ï¼Œå®šä¹‰åˆ°aå­—æ¯ä¸Šæ˜¯ä¸ºäº†å¥½æŒ‰
-#a::Winset, Alwaysontop, toggle, A
-;ä»é»˜è®¤Ctrlï¼‹Wæ˜¯å…³é—­æ ‡ç­¾ä¸Šä¿®æ”¹ä¸€ç‚¹æˆå…³é—­ç¨‹åºã€‚
-#w::WinClose A
+;¶ÔÓÚÖÃ¶¥×îºÃÓÃ¿ì½İ¼üÀ´µÄ¸ü×¼È·Ò»µã
+;#F1::Winset, Alwaysontop, toggle, A
+;´ÓÄ¬ÈÏCtrl£«WÊÇ¹Ø±Õ±êÇ©ÉÏĞŞ¸ÄÒ»µã³É¹Ø±Õ³ÌĞò¡£
+;#w::WinClose A
 
-;æŒ‰ä½WinåŠ æ»šè½®æ¥è°ƒæ•´éŸ³é‡å¤§å°
+;°´×¡Win¼Ó¹öÂÖÀ´µ÷ÕûÒôÁ¿´óĞ¡
 LWin & WheelUp::Send,{Volume_Up}
 LWin & WheelDown::Send,{Volume_Down}
 
 
-;************** è‡ªå®šä¹‰æ–¹æ³•^ ************** {{{1
+;************** ×Ô¶¨Òå·½·¨^ ************** {{{1
 MouseIsOver(WinTitle) {
     MouseGetPos,,, Win
     return WinExist(WinTitle . " ahk_id " . Win)
 }
 
-;fp,å…¨è·¯å¾„æ–‡ä»¶å 1è·¯å¾„,2å…¨æ–‡ä»¶å,3ä»…æ–‡ä»¶å,4æ‰©å±•å,5æ·»åŠ 64å­—æ ·
+;fp,È«Â·¾¶ÎÄ¼şÃû 1Â·¾¶,2È«ÎÄ¼şÃû,3½öÎÄ¼şÃû,4À©Õ¹Ãû,5Ìí¼Ó64×ÖÑù
 GetFileInfo(fp,act){
 	;D:\Tools\Office\EverEdit\eeie.exe
 	;InStr(Haystack, Needle [, CaseSensitive = false, StartingPos = 1, Occurrence = 1]): 
@@ -473,7 +478,7 @@ GetFileInfo(fp,act){
 	else if(act==2)
 		return % substr(fp,slash+1)
 	else {
-		;å½“æ–‡ä»¶åæ²¡æœ‰åç¼€å
+		;µ±ÎÄ¼şÃûÃ»ÓĞºó×ºÃû
 		if(dot==0){
 			if(act==3)
 				return % substr(fp,slash+1)
@@ -508,13 +513,13 @@ AscSend(str){
 	Sendinput % out
 }
 
-;é€‚åˆå•è¡Œç›´æ¥è°ƒç”¨
+;ÊÊºÏµ¥ĞĞÖ±½Óµ÷ÓÃ
 CoordWinClick(x,y){
 	CoordMode, Mouse, Window
 	click %x%, %y%
 }
 
-;åœ¨è°ƒç”¨çš„è¿‡ç¨‹å‰é¢ç»Ÿä¸€åŠ ä¸Šä¸€å¥ CoordMode, Mouse, Window è¾ƒå¥½ï¼Œä¸‹åŒ
+;ÔÚµ÷ÓÃµÄ¹ı³ÌÇ°ÃæÍ³Ò»¼ÓÉÏÒ»¾ä CoordMode, Mouse, Window ½ÏºÃ£¬ÏÂÍ¬
 ClickSleep(x,y,s){
 	click %x%, %y%
 	Sleep, % 100*s
@@ -532,67 +537,67 @@ MyWinWaitActive(title){
 	WinWaitActive, %title%, 
 }
 
-GetCursorShape(){   ;è·å–å…‰æ ‡ç‰¹å¾ç  by nnrxin  
-    VarSetCapacity( PCURSORINFO, 20, 0) ;ä¸ºé¼ æ ‡ä¿¡æ¯ ç»“æ„ è®¾ç½®å‡º20å­—èŠ‚ç©ºé—´
-    NumPut(20, PCURSORINFO, 0, "UInt")  ;*å£°æ˜å‡º ç»“æ„ çš„å¤§å°cbSize = 20å­—èŠ‚
-    DllCall("GetCursorInfo", "Ptr", &PCURSORINFO) ;è·å– ç»“æ„-å…‰æ ‡ä¿¡æ¯
-    if ( NumGet( PCURSORINFO, 4, "UInt")="0" ) ;å½“å…‰æ ‡éšè—æ—¶ï¼Œç›´æ¥è¾“å‡ºç‰¹å¾ç ä¸º0
+GetCursorShape(){   ;»ñÈ¡¹â±êÌØÕ÷Âë by nnrxin  
+    VarSetCapacity( PCURSORINFO, 20, 0) ;ÎªÊó±êĞÅÏ¢ ½á¹¹ ÉèÖÃ³ö20×Ö½Ú¿Õ¼ä
+    NumPut(20, PCURSORINFO, 0, "UInt")  ;*ÉùÃ÷³ö ½á¹¹ µÄ´óĞ¡cbSize = 20×Ö½Ú
+    DllCall("GetCursorInfo", "Ptr", &PCURSORINFO) ;»ñÈ¡ ½á¹¹-¹â±êĞÅÏ¢
+    if ( NumGet( PCURSORINFO, 4, "UInt")="0" ) ;µ±¹â±êÒş²ØÊ±£¬Ö±½ÓÊä³öÌØÕ÷ÂëÎª0
         return, 0
-    VarSetCapacity( ICONINFO, 20, 0) ;åˆ›å»º ç»“æ„-å›¾æ ‡ä¿¡æ¯
-    DllCall("GetIconInfo", "Ptr", NumGet(PCURSORINFO, 8), "Ptr", &ICONINFO)  ;è·å– ç»“æ„-å›¾æ ‡ä¿¡æ¯
-    VarSetCapacity( lpvMaskBits, 128, 0) ;åˆ›é€  æ•°ç»„-æ©å›¾ä¿¡æ¯ï¼ˆ128å­—èŠ‚ï¼‰
-    DllCall("GetBitmapBits", "Ptr", NumGet( ICONINFO, 12), "UInt", 128, "UInt", &lpvMaskBits)  ;è¯»å– æ•°ç»„-æ©å›¾ä¿¡æ¯
-    loop, 128{ ;æ©å›¾ç 
-        MaskCode += NumGet( lpvMaskBits, A_Index, "UChar")  ;ç´¯åŠ æ‹¼åˆ
+    VarSetCapacity( ICONINFO, 20, 0) ;´´½¨ ½á¹¹-Í¼±êĞÅÏ¢
+    DllCall("GetIconInfo", "Ptr", NumGet(PCURSORINFO, 8), "Ptr", &ICONINFO)  ;»ñÈ¡ ½á¹¹-Í¼±êĞÅÏ¢
+    VarSetCapacity( lpvMaskBits, 128, 0) ;´´Ôì Êı×é-ÑÚÍ¼ĞÅÏ¢£¨128×Ö½Ú£©
+    DllCall("GetBitmapBits", "Ptr", NumGet( ICONINFO, 12), "UInt", 128, "UInt", &lpvMaskBits)  ;¶ÁÈ¡ Êı×é-ÑÚÍ¼ĞÅÏ¢
+    loop, 128{ ;ÑÚÍ¼Âë
+        MaskCode += NumGet( lpvMaskBits, A_Index, "UChar")  ;ÀÛ¼ÓÆ´ºÏ
     }
-    if (NumGet( ICONINFO, 16, "UInt")<>"0"){ ;é¢œè‰²å›¾ä¸ä¸ºç©ºæ—¶ï¼ˆå½©è‰²å›¾æ ‡æ—¶ï¼‰
-        VarSetCapacity( lpvColorBits, 4096, 0)  ;åˆ›é€  æ•°ç»„-è‰²å›¾ä¿¡æ¯ï¼ˆ4096å­—èŠ‚ï¼‰
-        DllCall("GetBitmapBits", "Ptr", NumGet( ICONINFO, 16), "UInt", 4096, "UInt", &lpvColorBits)  ;è¯»å– æ•°ç»„-è‰²å›¾ä¿¡æ¯
-        loop, 256{ ;è‰²å›¾ç 
-            ColorCode += NumGet( lpvColorBits, A_Index*16-3, "UChar")  ;ç´¯åŠ æ‹¼åˆ
+    if (NumGet( ICONINFO, 16, "UInt")<>"0"){ ;ÑÕÉ«Í¼²»Îª¿ÕÊ±£¨²ÊÉ«Í¼±êÊ±£©
+        VarSetCapacity( lpvColorBits, 4096, 0)  ;´´Ôì Êı×é-É«Í¼ĞÅÏ¢£¨4096×Ö½Ú£©
+        DllCall("GetBitmapBits", "Ptr", NumGet( ICONINFO, 16), "UInt", 4096, "UInt", &lpvColorBits)  ;¶ÁÈ¡ Êı×é-É«Í¼ĞÅÏ¢
+        loop, 256{ ;É«Í¼Âë
+            ColorCode += NumGet( lpvColorBits, A_Index*16-3, "UChar")  ;ÀÛ¼ÓÆ´ºÏ
         }  
     } else
         ColorCode := "0"
-    DllCall("DeleteObject", "Ptr", NumGet( ICONINFO, 12))  ; *æ¸…ç†æ©å›¾
-    DllCall("DeleteObject", "Ptr", NumGet( ICONINFO, 16))  ; *æ¸…ç†è‰²å›¾
-    VarSetCapacity( PCURSORINFO, 0) ;æ¸…ç©º ç»“æ„-å…‰æ ‡ä¿¡æ¯
-    VarSetCapacity( ICONINFO, 0) ;æ¸…ç©º ç»“æ„-å›¾æ ‡ä¿¡æ¯
-    VarSetCapacity( lpvMaskBits, 0)  ;æ¸…ç©º æ•°ç»„-æ©å›¾
-    VarSetCapacity( lpvColorBits, 0)  ;æ¸…ç©º æ•°ç»„-è‰²å›¾
-    return, % MaskCode//2 . ColorCode  ;è¾“å‡ºç‰¹å¾ç 
+    DllCall("DeleteObject", "Ptr", NumGet( ICONINFO, 12))  ; *ÇåÀíÑÚÍ¼
+    DllCall("DeleteObject", "Ptr", NumGet( ICONINFO, 16))  ; *ÇåÀíÉ«Í¼
+    VarSetCapacity( PCURSORINFO, 0) ;Çå¿Õ ½á¹¹-¹â±êĞÅÏ¢
+    VarSetCapacity( ICONINFO, 0) ;Çå¿Õ ½á¹¹-Í¼±êĞÅÏ¢
+    VarSetCapacity( lpvMaskBits, 0)  ;Çå¿Õ Êı×é-ÑÚÍ¼
+    VarSetCapacity( lpvColorBits, 0)  ;Çå¿Õ Êı×é-É«Í¼
+    return, % MaskCode//2 . ColorCode  ;Êä³öÌØÕ÷Âë
 }
 
 Sub_MouseClick123:
-	if winc_presses > 0 ; SetTimer å·²ç»å¯åŠ¨, æ‰€ä»¥æˆ‘ä»¬è®°å½•é”®å‡».
+	if winc_presses > 0 ; SetTimer ÒÑ¾­Æô¶¯, ËùÒÔÎÒÃÇ¼ÇÂ¼¼ü»÷.
 	{
 		winc_presses += 1
 		return
 	}
-	; å¦åˆ™, è¿™æ˜¯æ–°å¼€å§‹ç³»åˆ—ä¸­çš„é¦–æ¬¡æŒ‰ä¸‹. æŠŠæ¬¡æ•°è®¾ä¸º 1 å¹¶å¯åŠ¨
-	; è®¡æ—¶å™¨ï¼š
+	; ·ñÔò, ÕâÊÇĞÂ¿ªÊ¼ÏµÁĞÖĞµÄÊ×´Î°´ÏÂ. °Ñ´ÎÊıÉèÎª 1 ²¢Æô¶¯
+	; ¼ÆÊ±Æ÷£º
 	winc_presses = 1
-	SetTimer, KeyWinC, % GV_MouseTimer ; åœ¨ 400 æ¯«ç§’å†…ç­‰å¾…æ›´å¤šçš„é”®å‡».
+	SetTimer, KeyWinC, % GV_MouseTimer ; ÔÚ 400 ºÁÃëÄÚµÈ´ı¸ü¶àµÄ¼ü»÷.
 return
 
 Sub_KeyClick123:
-	if winc_presses > 0 ; SetTimer å·²ç»å¯åŠ¨, æ‰€ä»¥æˆ‘ä»¬è®°å½•é”®å‡».
+	if winc_presses > 0 ; SetTimer ÒÑ¾­Æô¶¯, ËùÒÔÎÒÃÇ¼ÇÂ¼¼ü»÷.
 	{
 		winc_presses += 1
 		return
 	}
-	; å¦åˆ™, è¿™æ˜¯æ–°å¼€å§‹ç³»åˆ—ä¸­çš„é¦–æ¬¡æŒ‰ä¸‹. æŠŠæ¬¡æ•°è®¾ä¸º 1 å¹¶å¯åŠ¨
-	; è®¡æ—¶å™¨ï¼š
+	; ·ñÔò, ÕâÊÇĞÂ¿ªÊ¼ÏµÁĞÖĞµÄÊ×´Î°´ÏÂ. °Ñ´ÎÊıÉèÎª 1 ²¢Æô¶¯
+	; ¼ÆÊ±Æ÷£º
 	winc_presses = 1
-	SetTimer, KeyWinC, % GV_KeyTimer ; åœ¨ 400 æ¯«ç§’å†…ç­‰å¾…æ›´å¤šçš„é”®å‡».
+	SetTimer, KeyWinC, % GV_KeyTimer ; ÔÚ 400 ºÁÃëÄÚµÈ´ı¸ü¶àµÄ¼ü»÷.
 return
 
 KeyWinC:
 	SetTimer, KeyWinC, off
-	if winc_presses = 1 ; æ­¤é”®æŒ‰ä¸‹äº†ä¸€æ¬¡.
+	if winc_presses = 1 ; ´Ë¼ü°´ÏÂÁËÒ»´Î.
 	{
 		fun_KeyClickAction123(GV_KeyClickAction1)
 	}
-	else if winc_presses = 2 ; æ­¤é”®æŒ‰ä¸‹äº†ä¸¤æ¬¡.
+	else if winc_presses = 2 ; ´Ë¼ü°´ÏÂÁËÁ½´Î.
 	{
 		fun_KeyClickAction123(GV_KeyClickAction2)
 	}
@@ -601,8 +606,8 @@ KeyWinC:
 		fun_KeyClickAction123(GV_KeyClickAction3)
 		;MsgBox, Three or more clicks detected.
 	}
-	; ä¸è®ºè§¦å‘äº†ä¸Šé¢çš„å“ªä¸ªåŠ¨ä½œ, éƒ½å¯¹ count è¿›è¡Œé‡ç½®
-	; ä¸ºä¸‹ä¸€ä¸ªç³»åˆ—çš„æŒ‰ä¸‹åšå‡†å¤‡:
+	; ²»ÂÛ´¥·¢ÁËÉÏÃæµÄÄÄ¸ö¶¯×÷, ¶¼¶Ô count ½øĞĞÖØÖÃ
+	; ÎªÏÂÒ»¸öÏµÁĞµÄ°´ÏÂ×ö×¼±¸:
 	winc_presses = 0
 return
 
@@ -641,7 +646,7 @@ GF_GetSysVar(sys_var_name)
 Sub_ClipAppend:
 	;SendInput,^{Home}^+{End}^c
 	Send,^c
-	ToolTip å·²ç»æ·»åŠ åˆ° %GV_TempPath%\ClipAppend.txt
+	ToolTip ÒÑ¾­Ìí¼Óµ½ %GV_TempPath%\ClipAppend.txt
 	FileAppend, %ClipBoard%.`n, %GV_TempPath%\ClipAppend.txt
 	Sleep 1000
 	ToolTip
@@ -699,29 +704,29 @@ Sub_WindowNoCaption:
 	bd := 8 ;win8Border = 4
 	lW := A_ScreenWidth
 	hW := A_ScreenHeight
-	if(xTB == 0){ ;å·¦è¾¹å’Œä¸Šã€ä¸‹é¢çš„æƒ…å†µ
-		if(yTB == 0){ ;ä»»åŠ¡æ åœ¨ä¸Šå’Œå·¦
-			if(lengthTB == A_ScreenWidth){ ;åœ¨ä¸Š
+	if(xTB == 0){ ;×ó±ßºÍÉÏ¡¢ÏÂÃæµÄÇé¿ö
+		if(yTB == 0){ ;ÈÎÎñÀ¸ÔÚÉÏºÍ×ó
+			if(lengthTB == A_ScreenWidth){ ;ÔÚÉÏ
 				xW := 0
 				yW := hightTB
 				lW := A_ScreenWidth
 				hW := A_ScreenHeight - hightTB
 			}
-			else{ ;åœ¨å·¦
+			else{ ;ÔÚ×ó
 				xW := lengthTB
 				yW := 0
 				lW := A_ScreenWidth - lengthTB
 				hW := A_ScreenHeight
 			}
 		}
-		else{ ;åœ¨ä¸‹
+		else{ ;ÔÚÏÂ
 			xW := 0	
 			yW := 0
 			lW := A_ScreenWidth
 			hW := A_ScreenHeight - hightTB
 		}
 	}
-	else{ ;åœ¨å³
+	else{ ;ÔÚÓÒ
 		xW := 0
 		yW := 0
 		lW := A_ScreenWidth - lengthTB
@@ -738,9 +743,9 @@ Decimal_to_Hex(var)
 	return var
 }
 
-;æ‰“å¼€å‰ªè´´æ¿ä¸­å¤šä¸ªé“¾æ¥
+;´ò¿ª¼ôÌù°åÖĞ¶à¸öÁ´½Ó
 OpenClipURLS:
-	Loop, parse, clipboard, `n, `r  ; åœ¨ `r ä¹‹å‰æŒ‡å®š `n, è¿™æ ·å¯ä»¥åŒæ—¶æ”¯æŒå¯¹ Windows å’Œ Unix æ–‡ä»¶çš„è§£æ.
+	Loop, parse, clipboard, `n, `r  ; ÔÚ `r Ö®Ç°Ö¸¶¨ `n, ÕâÑù¿ÉÒÔÍ¬Ê±Ö§³Ö¶Ô Windows ºÍ Unix ÎÄ¼şµÄ½âÎö.
 	{
 		cu := A_LoopField
 		if(RegExMatch(A_LoopField,"^http")){
@@ -749,14 +754,14 @@ OpenClipURLS:
 		}
 	}
 return
-;************** è‡ªå®šä¹‰æ–¹æ³•$ **************
+;************** ×Ô¶¨Òå·½·¨$ **************
 
 
-;************** Youdao_ç½‘ç»œç¿»è¯‘^ ********* {{{1
-;è¯­éŸ³+å¼¹çª—  ç¿»è¯‘-ä¸­è‹±äº’è¯‘	byå¤©ç”œ	From:Cando_æœ‰é“ç¿»è¯‘+å‰ªè´´æ¿å‡½æ•°+Splashå‡½æ•°+åˆ¤æ–­è°ƒè¯•
+;************** Youdao_ÍøÂç·­Òë^ ********* {{{1
+;ÓïÒô+µ¯´°  ·­Òë-ÖĞÓ¢»¥Òë	byÌìÌğ	From:Cando_ÓĞµÀ·­Òë+¼ôÌù°åº¯Êı+Splashº¯Êı+ÅĞ¶Ïµ÷ÊÔ
 
 <#y::
-	åŸå€¼:=Clipboard
+	Ô­Öµ:=Clipboard
 	clipboard =
 	Send ^c
 	gosub sound
@@ -765,14 +770,14 @@ sound:
 	ClipWait,0.5
 	If(ErrorLevel)
 		{
-		InputBox,varTranslation,è¯·è¾“å…¥,ä½ æƒ³ç¿»è¯‘å•¥ï¼Œæˆ‘æ¥è¯´
+		InputBox,varTranslation,ÇëÊäÈë,ÄãÏë·­ÒëÉ¶£¬ÎÒÀ´Ëµ
 		if !ErrorLevel
 			{
-			Youdaoè¯‘æ–‡:=YouDaoApi(varTranslation)
-			Youdao_ç½‘ç»œé‡Šä¹‰:= json(Youdaoè¯‘æ–‡, "web.value")
-			SplashYoudaoMsg("Youdao_ç½‘ç»œç¿»è¯‘", Youdao_ç½‘ç»œé‡Šä¹‰)
+			YoudaoÒëÎÄ:=YouDaoApi(varTranslation)
+			Youdao_ÍøÂçÊÍÒå:= json(YoudaoÒëÎÄ, "web.value")
+			SplashYoudaoMsg("Youdao_ÍøÂç·­Òë", Youdao_ÍøÂçÊÍÒå)
 			spovice:=ComObjCreate("sapi.spvoice")
-			spovice.Speak(Youdao_ç½‘ç»œé‡Šä¹‰)
+			spovice.Speak(Youdao_ÍøÂçÊÍÒå)
 			Sleep, 3000
 			SplashTextOff
 			}
@@ -780,20 +785,21 @@ sound:
 	else
 		{
 			varTranslation:=clipboard
-			Youdaoè¯‘æ–‡:=YouDaoApi(varTranslation)
-			Youdao_ç½‘ç»œé‡Šä¹‰:= json(Youdaoè¯‘æ–‡, "web.value")
-			SplashYoudaoMsg("Youdao_ç½‘ç»œç¿»è¯‘", Youdao_ç½‘ç»œé‡Šä¹‰)
+			YoudaoÒëÎÄ:=YouDaoApi(varTranslation)
+			Youdao_ÍøÂçÊÍÒå:= json(YoudaoÒëÎÄ, "web.value")
+			SplashYoudaoMsg("Youdao_ÍøÂç·­Òë", Youdao_ÍøÂçÊÍÒå)
 			spovice:=ComObjCreate("sapi.spvoice")
-			spovice.Speak(Youdao_ç½‘ç»œé‡Šä¹‰)
+			spovice.Speak(Youdao_ÍøÂçÊÍÒå)
 			Sleep, 3000
 			SplashTextOff
 		}
-	Clipboard:=åŸå€¼
+	;Clipboard:=Ô­Öµ
+	Clipboard:=Youdao_ÍøÂçÊÍÒå
 return
 
 SplashYoudaoMsg(title, content){
 	;SoundBeep 750, 500
-	MouseGetPos, MouseX, MouseY ;è·å¾—é¼ æ ‡ä½ç½®x,y
+	MouseGetPos, MouseX, MouseY ;»ñµÃÊó±êÎ»ÖÃx,y
 	MouseZ := MouseX + 100
 	SplashTextOn , 400, 60, %title%, %content%
 	WinMove, %title%, , %MouseZ%, %MouseY%
@@ -849,11 +855,11 @@ json(ByRef js, s, v = "")
 	Return, j == "false" ? 0 : j == "true" ? 1 : j == "null" or j == "nul"
 		? "" : SubStr(j, 1, 1) == """" ? SubStr(j, 2, -1) : j
 }
-;************** Youdao_ç½‘ç»œç¿»è¯‘$ *********
+;************** Youdao_ÍøÂç·­Òë$ *********
 
-;************** ç»„åˆå¿«æ·é”®éƒ¨åˆ† ************** {{{1
-;************** Escapeç›¸å…³ ************** {{{2
-; +HJKL è¡¨ç¤ºå·¦ä¸‹å³ä¸Šæ–¹å‘  SendInput@chm
+;************** ×éºÏ¿ì½İ¼ü²¿·Ö ************** {{{1
+;************** EscapeÏà¹Ø ************** {{{2
+; +HJKL ±íÊ¾×óÏÂÓÒÉÏ·½Ïò  SendInput@chm
 Escape & j:: SendInput,{Blind}{Down}
 Escape & k:: SendInput,{Blind}{Up}
 Escape & h:: SendInput,{Blind}{Left}
@@ -865,7 +871,7 @@ Escape & b:: SendInput,{Blind}^{Left}
 Escape & e:: SendInput,{Blind}{PgDn}
 Escape & q:: SendInput,{Blind}{PgUp}
 
-;************** u,iå•å‡»åŒå‡»^ ************** 
+;************** u,iµ¥»÷Ë«»÷^ ************** 
 ;Escape & u:: SendInput,{Blind}^{End}
 ;Escape & i:: SendInput,{Blind}^{Home}
 ;Escape & n:: SendInput,{Blind}{PgDn}
@@ -894,9 +900,9 @@ Escape & m::
 	GV_KeyClickAction2 := "SendInput,^{PgUp}"
 	GoSub,Sub_KeyClick123
 return
-;************** u,iå•å‡»åŒå‡»$ **************
+;************** u,iµ¥»÷Ë«»÷$ **************
 
-;***************** å‰ªè´´æ¿ç›¸å…³^ ************** {{{2
+;***************** ¼ôÌù°åÏà¹Ø^ ************** {{{2
 Escape & v::
 	if EscapeV_presses > 0
 	{
@@ -942,24 +948,24 @@ PastePureText:
 return
 
 ;#z::Menu, MyMenu, Show  ; i.e. press the Win-Z hotkey to show the menu.
-;***************** å‰ªè´´æ¿ç›¸å…³$ **************
-;å…³é—­å’Œåˆ·æ–°
+;***************** ¼ôÌù°åÏà¹Ø$ **************
+;¹Ø±ÕºÍË¢ĞÂ
 Escape & g:: SendInput,{Blind}^w
 Escape & r:: SendInput,{Blind}^r
-;åˆ‡æ¢tab
+;ÇĞ»»tab
 Escape & o:: send,{Blind}^+{Tab}
 Escape & p:: send,{Blind}^{Tab}
-;å³é”®å’ŒDEL
+;ÓÒ¼üºÍDEL
 ;Escape & y:: send,{AppsKey}
 Escape & y:: Send {Click Right}
 Escape & d:: SendInput,{Delete}
-;Alttabï¼ŒWin8ä¸‹æš‚æ—¶ä¸èƒ½ç”¨
+;Alttab£¬Win8ÏÂÔİÊ±²»ÄÜÓÃ
 Escape & .:: AltTab
 Escape & ,:: ShiftAltTab
 
 Escape & `;:: WinClose A
 
-;enter å›è½¦çª—å£æœ€å¤§åŒ–
+;enter »Ø³µ´°¿Ú×î´ó»¯
 ;Escape & Enter:: WinMaximize A
 Escape & Enter:: GoSub,Sub_MaxRestore
 Escape & Space:: WinMinimize A
@@ -974,7 +980,7 @@ Escape & Space:: WinMinimize A
 !+Escape:: SendInput,!+{Escape}
 ^!+Escape:: SendInput,^!+{Escape}
 
-;æœ€åä¸€è¡Œæ¢å¤è‡ªèº«åŠŸèƒ½ï¼Œé‡è¦
+;×îºóÒ»ĞĞ»Ö¸´×ÔÉí¹¦ÄÜ£¬ÖØÒª
 Escape::
 	suspend permit
 	SendInput,{Escape}
@@ -997,12 +1003,12 @@ return
 */
 
 
-;************** CapsLockç›¸å…³ ************** {{{2
-;win+caps+æŒ‰é”®
+;************** CapsLockÏà¹Ø ************** {{{2
+;win+caps+°´¼ü
 ;Capslock & e::
-;state := GetKeyState("LWin", "T")  ; å½“ CapsLock æ‰“å¼€æ—¶ä¸ºçœŸ, å¦åˆ™ä¸ºå‡.
+;state := GetKeyState("LWin", "T")  ; µ± CapsLock ´ò¿ªÊ±ÎªÕæ, ·ñÔòÎª¼Ù.
 ;if state
-	;msgbox handleï¼
+	;msgbox handle£¡
 ;else
 	;send #e
 ;return
@@ -1019,7 +1025,7 @@ CapsLock & q::SendInput,{Blind}{PgUp}
 CapsLock & e::SendInput,{Blind}{PgDn}
 
  
-;åª’ä½“ç›¸å…³
+;Ã½ÌåÏà¹Ø
 CapsLock & 9::send,{Media_Prev}
 CapsLock & 0::send,{Media_Next}
 
@@ -1032,13 +1038,13 @@ CapsLock & backspace::send,{Media_Play_Pause}
 CapsLock & PgUp:: send,{Media_Prev}
 CapsLock & PgDn:: send,{Media_Next}
 
-;ç§»åŠ¨é¼ æ ‡å…‰æ ‡ï¼Œä¾‹å¦‚ç”¨åœ¨å±å¹•å–è‰²
+;ÒÆ¶¯Êó±ê¹â±ê£¬ÀıÈçÓÃÔÚÆÁÄ»È¡É«
 CapsLock & up::MouseMove, 0, -1, 0, R
 CapsLock & down::MouseMove, 0, 1, 0, R
 CapsLock & left::MouseMove, -1, 0, 0, R
 CapsLock & right::MouseMove, 1, 0, 0, R
 
-;************** u,iå•å‡»åŒå‡»^ **************
+;************** u,iµ¥»÷Ë«»÷^ **************
 ;CapsLock & i:: SendInput,{Blind}^{Home}
 ;CapsLock & u:: SendInput,{Blind}^{End}
 ;CapsLock & n:: SendInput,{Blind}{PgDn}
@@ -1068,9 +1074,9 @@ CapsLock & m::
 	GoSub,Sub_KeyClick123
 return
 
-;************** u,iå•å‡»åŒå‡»$ **************
+;************** u,iµ¥»÷Ë«»÷$ **************
 
-;***************** å‰ªè´´æ¿ç›¸å…³^ **************
+;***************** ¼ôÌù°åÏà¹Ø^ **************
 CapsLock & v::
 	if CapsLockV_presses > 0
 	{
@@ -1096,7 +1102,7 @@ KeyCapsLockV:
 	}
 	CapsLockV_presses = 0
 return
-;***************** å‰ªè´´æ¿ç›¸å…³$ **************
+;***************** ¼ôÌù°åÏà¹Ø$ **************
 CapsLock & c::
 	GoSub,Sub_ClipAppend
 return
@@ -1112,7 +1118,7 @@ CapsLock & y:: Send {Click Right}
 CapsLock & d:: SendInput,{Delete}
 CapsLock & f:: SendInput,{Backspace}
 
-;ç²˜è´´ç„¶åå›è½¦ï¼Œå¤šç”¨åœ¨æœç´¢æ¡†ç­‰è¾“å…¥çš„ä½ç½®ï¼Œä¸€ä¸ªåŒæ‰‹ï¼Œä¸€ä¸ªå•æ‰‹
+;Õ³ÌùÈ»ºó»Ø³µ£¬¶àÓÃÔÚËÑË÷¿òµÈÊäÈëµÄÎ»ÖÃ£¬Ò»¸öË«ÊÖ£¬Ò»¸öµ¥ÊÖ
 CapsLock & s:: SendInput,^v{Enter}
 	GV_KeyClickAction1 := "SendInput,^v{Enter}"
 	GV_KeyClickAction2 := "SendInput,^{Home}^+{End}^v{Enter}"
@@ -1120,25 +1126,25 @@ CapsLock & s:: SendInput,^v{Enter}
 return
 
 
-;AltTabMenu ç”¨å¤„ä¸å¤§
+;AltTabMenu ÓÃ´¦²»´ó
 CapsLock & .:: AltTab
 CapsLock & ,:: ShiftAltTab
 
-;å…³é—­çª—å£
+;¹Ø±Õ´°¿Ú
 CapsLock & `;:: WinClose A
 
 
-;enter å›è½¦çª—å£æœ€å¤§åŒ–
+;enter »Ø³µ´°¿Ú×î´ó»¯
 CapsLock & Enter:: GoSub,Sub_MaxRestore
 CapsLock & Space:: WinMinimize A
 
-;å°†capsæ›¿æ¢ä¸ºesc
+;½«capsÌæ»»Îªesc
 CapsLock::
 	suspend permit
 	SendInput,{Escape}
 return
 
-;+CapsLock:: CapsLock "ä¹‹å‰çš„å†™æ³•
+;+CapsLock:: CapsLock "Ö®Ç°µÄĞ´·¨
 ;^PrintScreen::
 ^CapsLock::  ; control + capslock to toggle capslock.  alwaysoff/on so that the key does not blink
 	GetKeyState t, CapsLock, T
@@ -1147,7 +1153,7 @@ return
 Return
 
 
-;************** åˆ†å·;ç›¸å…³ ************** {{{2
+;************** ·ÖºÅ;Ïà¹Ø ************** {{{2
 `; & j:: SendInput,{Blind}{Down}
 `; & k:: SendInput,{Blind}{Up}
 `; & h:: SendInput,{Blind}{Left}
@@ -1187,7 +1193,7 @@ return
 	GoSub,Sub_KeyClick123
 return
 
-;ç²˜è´´ç„¶åå›è½¦ï¼Œå¤šç”¨åœ¨æœç´¢æ¡†ç­‰è¾“å…¥çš„ä½ç½®ï¼Œä¸€ä¸ªåŒæ‰‹ï¼Œä¸€ä¸ªå•æ‰‹
+;Õ³ÌùÈ»ºó»Ø³µ£¬¶àÓÃÔÚËÑË÷¿òµÈÊäÈëµÄÎ»ÖÃ£¬Ò»¸öË«ÊÖ£¬Ò»¸öµ¥ÊÖ
 `; & g::
 	GV_KeyClickAction1 := "SendInput,^v{Enter}"
 	GV_KeyClickAction2 := "SendInput,^{Home}^+{End}^v{Enter}"
@@ -1195,9 +1201,11 @@ return
 return
 
 
-;æœç´¢é€‰ä¸­çš„æ–‡æœ¬
+;ËÑË÷Ñ¡ÖĞµÄÎÄ±¾
 `; & s::GoSub,Sub_SearchSelectTxt
 Sub_SearchSelectTxt:
+	send,^c
+	sleep,100
 	clip:=
 	clip:=clipboard
 	If RegExMatch(clip, "^\d{6}$"){
@@ -1209,13 +1217,13 @@ Sub_SearchSelectTxt:
 	}
 return
 
-;æ¸…ç©ºå¤åˆ¶ç²˜è´´
-`; & d::SendInput,{Home}+{End}{Delete}
+;Çå¿Õ¸´ÖÆÕ³Ìù
+`; & d::SendInput,{Home 2}+{End}{Backspace}
 `; & a::SendInput,^{Home}^+{End}{Delete}
 
 
 
-;ç²˜è´´å¹¶è½¬åˆ°,å¤šæ•°æµè§ˆå™¨å’Œtcä¸­éƒ½å¯ç”¨
+;Õ³Ìù²¢×ªµ½,¶àÊıä¯ÀÀÆ÷ºÍtcÖĞ¶¼¿ÉÓÃ
 `; & u:: send,^t!d^v{Enter}
 ;`; & u:: send,^t!dwww.^v{Enter}
 
@@ -1224,7 +1232,7 @@ return
 `; & 2:: AscSend(fun_GetFormatTime(" HHmm"))
 `; & 3:: AscSend("#" . fun_GetFormatTime("MMdd"))
 
-;æ¢å¤åˆ†å·è‡ªèº«åŠŸèƒ½
+;»Ö¸´·ÖºÅ×ÔÉí¹¦ÄÜ
 ;$`;:: SendInput,`;
 
 `;:: send,`;
@@ -1234,9 +1242,9 @@ return
 !`;:: send,!`;
 ::: send,:
 
-;************** Spaceç©ºæ ¼é”®ç›¸å…³ ************** {{{2
+;************** Space¿Õ¸ñ¼üÏà¹Ø ************** {{{2
 #If GV_ToggleSpaceKeys==1 
-;vimç­‰ä¸­å†²çªæ’é™¤ï¼Œä½†åœ¨tcä¸­ä¸èƒ½è¿ç»­ç©ºæ ¼
+;vimµÈÖĞ³åÍ»ÅÅ³ı£¬µ«ÔÚtcÖĞ²»ÄÜÁ¬Ğø¿Õ¸ñ
 	Space & j:: SendInput,{Blind}{Down}
 	Space & k:: SendInput,{Blind}{Up}
 	Space & h:: SendInput,{Blind}{Left}
@@ -1284,8 +1292,8 @@ return
 	+Space::+Space
 #If
 
-;************** `èŠ±å·é”®ç›¸å…³ ************** {{{2
-;è¿™ä¸ªä½ç½®é¡ºæ‰‹ï¼Œä¸»è¦æ˜¯åœ¨æŒ‰ä½åšäº†é‚£ä¹ˆé€‰æ‹©ä¹‹åï¼Œå†å»æŒ‰ctrlæˆ–è€…ï¼›åˆ†å·ç­‰å°±æ˜¾å¾—è¿œäº†
+;************** `»¨ºÅ¼üÏà¹Ø ************** {{{2
+;Õâ¸öÎ»ÖÃË³ÊÖ£¬Ö÷ÒªÊÇÔÚ°´×¡×öÁËÄÇÃ´Ñ¡ÔñÖ®ºó£¬ÔÙÈ¥°´ctrl»òÕß£»·ÖºÅµÈ¾ÍÏÔµÃÔ¶ÁË
 ` & 1:: SendInput,^x
 ` & 2:: SendInput,^c
 ` & 3:: SendInput,^v
@@ -1325,12 +1333,12 @@ return
 	GoSub,Sub_KeyClick123
 return
 
-;ç‚¹ä¸æ˜¯é»˜è®¤çš„â€œç¡®å®šâ€æˆ–è€…OKæŒ‰é’®ï¼Œå¦‚æœæ²¡æœ‰å°±ç‚¹ç¬¬ä¸€ä¸ªButton1ï¼Œé€‚ç”¨ä¸é‚£ç§ç®€å•çš„å¯¹è¯æ¡†ï¼Œæ¯”å¦‚TCçš„å¤‡æ³¨
+;µã²»ÊÇÄ¬ÈÏµÄ¡°È·¶¨¡±»òÕßOK°´Å¥£¬Èç¹ûÃ»ÓĞ¾ÍµãµÚÒ»¸öButton1£¬ÊÊÓÃÓëÄÇÖÖ¼òµ¥µÄ¶Ô»°¿ò£¬±ÈÈçTCµÄ±¸×¢
 ` & Enter::
 	try {
 		SetTitleMatchMode RegEx
 		SetTitleMatchMode Slow
-		ControlClick, i).*ç¡®å®š|OK.*, A
+		ControlClick, i).*È·¶¨|OK.*, A
 	} catch e {
 		ControlClick, Button1, A
 	}
@@ -1345,35 +1353,35 @@ return
 ;`::EzMenuShow()
 
 
-;************** Alttabç›¸å…³ ************** {{{2
+;************** AlttabÏà¹Ø ************** {{{2
 
-;æŒ‰ä½å·¦é”®å†è¿›è¡Œæ»šè½®ï¼Œåœ¨AltaTabèœå•ä¸­ï¼Œå¯ä»¥ç‚¹å‡»å³é”®æˆ–è€…æŒ‰ç©ºæ ¼è¿›è¡Œç¡®è®¤é€‰æ‹©ã€‚
-;å¤šç”¨åœ¨æŠŠæ–‡ä»¶æ‹–åˆ°åˆ«çš„ç¨‹åºä¸­æ‰“å¼€ï¼Œæˆ–è€…ç±»ä¼¼äºqqå¾®ä¿¡ä¼ æ–‡ä»¶ã€‚ä¹Ÿå¯ä»¥å°†æµè§ˆå™¨ä¸­çš„å›¾ç‰‡ç›´æ¥æ‹–åˆ°æ–‡ä»¶ç®¡ç†å™¨ä¸­ä¿å­˜
+;°´×¡×ó¼üÔÙ½øĞĞ¹öÂÖ£¬ÔÚAltaTab²Ëµ¥ÖĞ£¬¿ÉÒÔµã»÷ÓÒ¼ü»òÕß°´¿Õ¸ñ½øĞĞÈ·ÈÏÑ¡Ôñ¡£
+;¶àÓÃÔÚ°ÑÎÄ¼şÍÏµ½±ğµÄ³ÌĞòÖĞ´ò¿ª£¬»òÕßÀàËÆÓÚqqÎ¢ĞÅ´«ÎÄ¼ş¡£Ò²¿ÉÒÔ½«ä¯ÀÀÆ÷ÖĞµÄÍ¼Æ¬Ö±½ÓÍÏµ½ÎÄ¼ş¹ÜÀíÆ÷ÖĞ±£´æ
 LButton & WheelUp::ShiftAltTab
 LButton & WheelDown::AltTab
-;å°±æ²¡å¿…è¦è¿˜ç”¨è¿™ä¸ªäº†
+;¾ÍÃ»±ØÒª»¹ÓÃÕâ¸öÁË
 ;LWin & WheelUp::ShiftAltTab
 ;LWin & WheelDown::AltTab
 
-;é¼ æ ‡ä¸­æ“ä½œ
+;Êó±êÖĞ²Ù×÷
 #IfWinActive, ahk_class TaskSwitcherWnd
-	;Win10è‡ªå·±å·²ç»æ”¯æŒalttabä¸­æŒ‰ç©ºæ ¼é€‰æ‹©ç¨‹åº
+	;Win10×Ô¼ºÒÑ¾­Ö§³ÖalttabÖĞ°´¿Õ¸ñÑ¡Ôñ³ÌĞò
 	;if A_OSVersion in WIN_2003, WIN_XP, WIN_7
 	;{
 	!Space::send,{Alt Up}
 	Space::send,{Alt Up}
 	;}
-	;åœ¨alttabçš„èœå•ä¸­ï¼Œç‚¹å³é”®é€‰ä¸­å¯¹åº”çš„ç¨‹åº
+	;ÔÚalttabµÄ²Ëµ¥ÖĞ£¬µãÓÒ¼üÑ¡ÖĞ¶ÔÓ¦µÄ³ÌĞò
 	!RButton::send,{Alt Up}
 	~LButton & RButton::send,{Alt Up}
 
-	;alt+shift+tabï¼Œåˆ‡æ¢åˆ°ä¸Šä¸€ä¸ªçª—å£åŠŸèƒ½ï¼Œæ”¾åœ¨ä¸€èµ·å…±ç”¨ TaskSwitcherWndç®—äº†
+	;alt+shift+tab£¬ÇĞ»»µ½ÉÏÒ»¸ö´°¿Ú¹¦ÄÜ£¬·ÅÔÚÒ»Æğ¹²ÓÃ TaskSwitcherWndËãÁË
 	;<+Tab::ShiftAltTab
 
 
-	;å·¦æ‰‹
+	;×óÊÖ
 	!q::SendInput,{Blind}{Left}
-	;å³æ‰‹
+	;ÓÒÊÖ
 	!j::SendInput,{Blind}{Down}
 	!k::SendInput,{Blind}{Up}
 	!h::SendInput,{Blind}{Left}
@@ -1384,14 +1392,14 @@ LButton & WheelDown::AltTab
 	!.::SendInput,{Blind}{Right}
 #IfWinActive
 
-;Win10æ”¹æˆäº†MultitaskingViewFrame
+;Win10¸Ä³ÉÁËMultitaskingViewFrame
 #IfWinActive, ahk_class MultitaskingViewFrame
 	!RButton::send,{Alt Up}
 	~LButton & RButton::send,{Alt Up}
 
-	;å·¦æ‰‹
+	;×óÊÖ
 	!q::SendInput,{Blind}{Left}
-	;å³æ‰‹
+	;ÓÒÊÖ
 	!j::SendInput,{Blind}{Down}
 	!k::SendInput,{Blind}{Up}
 	!h::SendInput,{Blind}{Left}
@@ -1403,9 +1411,9 @@ LButton & WheelDown::AltTab
 #IfWinActive
 
 
-;************** tabç›¸å…³ ************** {{{2
+;************** tabÏà¹Ø ************** {{{2
 #If GV_ToggleTabKeys=1
-	;åŸºæœ¬æ“ä½œä¸Šä¸‹å·¦å³ï¼Œè¿˜å¯ä»¥æ‰©å±•ï¼Œä¸»è¦ç”¨åœ¨å·¦é”®å³é¼ çš„æ“ä½œæ–¹å¼
+	;»ù±¾²Ù×÷ÉÏÏÂ×óÓÒ£¬»¹¿ÉÒÔÀ©Õ¹£¬Ö÷ÒªÓÃÔÚ×ó¼üÓÒÊóµÄ²Ù×÷·½Ê½
 	Tab & s:: SendInput,{Blind}{Down}
 	Tab & w:: SendInput,{Blind}{Up}
 	Tab & a:: SendInput,{Blind}{Left}
@@ -1413,19 +1421,19 @@ LButton & WheelDown::AltTab
 	Tab & q:: SendInput,{Blind}{PgUp}
 	Tab & f:: SendInput,{Blind}{PgDn}
 
-	;å¯¹åº”ä»»åŠ¡æ ä¸Šå›ºå®šçš„å‰5ä¸ªç¨‹åºå¿«é€Ÿåˆ‡æ¢
+	;¶ÔÓ¦ÈÎÎñÀ¸ÉÏ¹Ì¶¨µÄÇ°5¸ö³ÌĞò¿ìËÙÇĞ»»
 	Tab & 1:: send,#1
 	Tab & 2:: send,#2
 	Tab & 3:: send,#3
 	Tab & 4:: send,#4
 	Tab & 5:: send,#5
 
-	;å¸¸ç”¨çš„ä¸‰ä¸ªæŒ‰é”®
+	;³£ÓÃµÄÈı¸ö°´¼ü
 	Tab & r:: SendInput,{Blind}{Del}
 	Tab & e:: SendInput,{Blind}{Enter}
 	Tab & space:: SendInput,{Blind}{Backspace}
 
-	;å³æ‰‹æ¨¡å¼ï¼Œå’Œcapsä¸€æ ·ï¼Œéšä¾¿æŒ‰å“ªä¸€ä¸ªéƒ½è¡Œï¼Œè‡ªç”±å‘æŒ¥å§
+	;ÓÒÊÖÄ£Ê½£¬ºÍcapsÒ»Ñù£¬Ëæ±ã°´ÄÄÒ»¸ö¶¼ĞĞ£¬×ÔÓÉ·¢»Ó°É
 	Tab & j:: SendInput,{Blind}{Down}
 	Tab & k:: SendInput,{Blind}{Up}
 	Tab & h:: SendInput,{Blind}{Left}
@@ -1438,11 +1446,11 @@ LButton & WheelDown::AltTab
 	Tab & p:: SendInput,{Blind}{PgDn}
 
 
-	;é‡è¦çš„alttabèœå•
+	;ÖØÒªµÄalttab²Ëµ¥
 	<!Tab::AltTab
 
 	;Tab:: SendInput,{Tab}
-	;æ¢å¤tabè‡ªèº«åŠŸèƒ½
+	;»Ö¸´tab×ÔÉí¹¦ÄÜ
 	Tab::
 		GV_KeyClickAction1 := "SendInput,{Tab}"
 		GV_KeyClickAction2 := "SendInput,#{Tab}"
@@ -1456,7 +1464,7 @@ LButton & WheelDown::AltTab
 #If 
 
 
-;************** å•é”®æ¨¡å¼ ************** {{{2
+;************** µ¥¼üÄ£Ê½ ************** {{{2
 #If GV_ToggleKeyMode=1
 	j::Send {Down}
 	k::Send {Up}
@@ -1499,7 +1507,7 @@ LButton & WheelDown::AltTab
 
 
 
-;************** æˆªå›¾å°åŠŸèƒ½ ************** {{{2
+;************** ½ØÍ¼Ğ¡¹¦ÄÜ ************** {{{2
 >!Space::fun_NircmdScreenShot(1)
 ^PrintScreen::fun_NircmdScreenShot(0)
 +PrintScreen::fun_NircmdScreenShot(1)
@@ -1518,30 +1526,30 @@ fun_NircmdScreenShot(wd)
 }
 
 
-;************** çª—å£ç›¸å…³ ************** {{{2
-;å»æ‰æ ‡é¢˜æ 
+;************** ´°¿ÚÏà¹Ø ************** {{{2
+;È¥µô±êÌâÀ¸
 #f11::
-	;WinSet, Style, ^0xC00000, A ;ç”¨æ¥åˆ‡æ¢æ ‡é¢˜è¡Œï¼Œä¸»è¦å½±å“æ˜¯æ— æ³•æ‹–åŠ¨çª—å£ä½ç½®ã€‚
-	;WinSet, Style, ^0x40000, A ;ç”¨æ¥åˆ‡æ¢sizing borderï¼Œä¸»è¦å½±å“æ˜¯æ— æ³•æ”¹å˜çª—å£å¤§å°ã€‚
+	;WinSet, Style, ^0xC00000, A ;ÓÃÀ´ÇĞ»»±êÌâĞĞ£¬Ö÷ÒªÓ°ÏìÊÇÎŞ·¨ÍÏ¶¯´°¿ÚÎ»ÖÃ¡£
+	;WinSet, Style, ^0x40000, A ;ÓÃÀ´ÇĞ»»sizing border£¬Ö÷ÒªÓ°ÏìÊÇÎŞ·¨¸Ä±ä´°¿Ú´óĞ¡¡£
 	GoSub, Sub_WindowNoCaption
 return
 
 
 
-;************** mouseé¼ æ ‡ç›¸å…³ ************** {{{2
-;é¼ æ ‡ä¾§è¾¹é”®ahkåªè®¤è¿™ä¸¤ä¸ªï¼Œå¯ä»¥è‡ªè¡Œå»æ‰æ³¨é‡Š
+;************** mouseÊó±êÏà¹Ø ************** {{{2
+;Êó±ê²à±ß¼üahkÖ»ÈÏÕâÁ½¸ö£¬¿ÉÒÔ×ÔĞĞÈ¥µô×¢ÊÍ
 ;XButton1:: Send,{PgUp}
 ;XButton2:: Send,{PgDn}
 
-;************** å‡ ç§æ¨¡å¼çš„å¼€å…³ï¼Œæš‚åœé‡å¯ ************** {{{2
+;************** ¼¸ÖÖÄ£Ê½µÄ¿ª¹Ø£¬ÔİÍ£ÖØÆô ************** {{{2
 ScrollLock::
 CapsLock & /::
 Escape & /::
 	GV_ToggleKeyMode := !GV_ToggleKeyMode
 	if(GV_ToggleKeyMode == 1)
-		tooltip å•é”®æ¨¡å¼å¯ç”¨
+		tooltip µ¥¼üÄ£Ê½ÆôÓÃ
 	else
-		tooltip å•é”®æ¨¡å¼å…³é—­
+		tooltip µ¥¼üÄ£Ê½¹Ø±Õ
 	sleep 2000
 	tooltip
 return
@@ -1549,26 +1557,26 @@ return
 ^!#Space::
 	GV_ToggleSpaceKeys := !GV_ToggleSpaceKeys
 	if(GV_ToggleSpaceKeys == 1)
-		tooltip ç©ºæ ¼ç»„åˆé”®å¯ç”¨
+		tooltip ¿Õ¸ñ×éºÏ¼üÆôÓÃ
 	else
-		tooltip ç©ºæ ¼ç»„åˆé”®å…³é—­
+		tooltip ¿Õ¸ñ×éºÏ¼ü¹Ø±Õ
 	sleep 2000
 	tooltip
 return
 
-;ç›´æ¥ç”¨ctrl+win+alt+tabé”®ä¼šå¼•å‘alttabï¼Œä¸åˆé€‚ã€‚è€Œcapså’ŒèŠ±å·æ˜¯ä¸è€ƒè™‘æ¨¡å¼éƒ½åœ¨çš„ã€‚æ•…ç”¨èŠ±å·ã€‚
+;Ö±½ÓÓÃctrl+win+alt+tab¼ü»áÒı·¢alttab£¬²»ºÏÊÊ¡£¶øcapsºÍ»¨ºÅÊÇ²»¿¼ÂÇÄ£Ê½¶¼ÔÚµÄ¡£¹ÊÓÃ»¨ºÅ¡£
 ^!#`::
 	GV_ToggleTabKeys := !GV_ToggleTabKeys
 	if(GV_ToggleTabKeys == 1)
-		tooltip Tabç»„åˆé”®å¯ç”¨
+		tooltip Tab×éºÏ¼üÆôÓÃ
 	else
-		tooltip Tabç»„åˆé”®å…³é—­
+		tooltip Tab×éºÏ¼ü¹Ø±Õ
 	sleep 2000
 	tooltip
 return
 
 
-;æš‚åœçƒ­é”®ï¼Œå¯ä»¥å†æŒ‰æ¢å¤
+;ÔİÍ£ÈÈ¼ü£¬¿ÉÒÔÔÙ°´»Ö¸´
 Pause::
 ^!#t::
 ;Escape & Pause::
@@ -1577,7 +1585,7 @@ Pause::
 	suspend toggle
 return
 
-;æš‚åœè„šæœ¬ï¼Œå¯ä»¥å³é”®èœå•é€‰æ‹©æˆ–è€…ç”¨é‡å¯è„šæœ¬æ¢å¤
+;ÔİÍ£½Å±¾£¬¿ÉÒÔÓÒ¼ü²Ëµ¥Ñ¡Ôñ»òÕßÓÃÖØÆô½Å±¾»Ö¸´
 ^!#z:: 
 	suspend permit
 	pause toggle
@@ -1587,12 +1595,12 @@ return
 	Reload
 return
 
-;è§£å†³Win10ä¸­ä»»åŠ¡æ æ— æ³•åˆ‡æ¢çš„è‡­æ¯›ç—…
+;½â¾öWin10ÖĞÈÎÎñÀ¸ÎŞ·¨ÇĞ»»µÄ³ôÃ«²¡
 ^!#e::run,nircmd shellrefresh
 
 
-;************** åº”ç”¨ç¨‹åºç›¸å…³ ************** {{{1
-;************** _groupç›¸å…³ ************** {{{2
+;************** Ó¦ÓÃ³ÌĞòÏà¹Ø ************** {{{1
+;************** _groupÏà¹Ø ************** {{{2
 #IfWinActive, ahk_group group_browser
 	F1:: SendInput,^t
 	F2:: send,{Blind}^+{Tab}
@@ -1600,8 +1608,8 @@ return
 	F4:: SendInput,^w
 	`;:: 
 		;msgbox % GetCursorShape()
-		;64ä½çš„Win7ä¸‹ï¼Œåœ¨è¾“å…¥æ¡†ä¸­æ˜¯148003967
-		If (GetCursorShape() = GV_CursorInputBox_64Win7)      ;I å‹å…‰æ ‡
+		;64Î»µÄWin7ÏÂ£¬ÔÚÊäÈë¿òÖĞÊÇ148003967
+		If (GetCursorShape() = GV_CursorInputBox_64Win7)      ;I ĞÍ¹â±ê
 			SendInput,`;
 		else 
 			Send {Click}
@@ -1609,7 +1617,7 @@ return
 	!`;:: Send {Click Right}
 	;^`;:: Send,`;
 
-	;æŒ‰ä½å·¦é”®ç‚¹å³é”®å‘é€Ctrl+Wå…³é—­æ ‡ç­¾
+	;°´×¡×ó¼üµãÓÒ¼ü·¢ËÍCtrl+W¹Ø±Õ±êÇ©
 	~LButton & RButton:: send ^w
 
 #IfWinActive
@@ -1620,10 +1628,11 @@ return
 #IfWinActive
 
 
-;totalcmdä¸­ç‰¹æ®Šçš„æŒ‰ä½å·¦é”®ç‚¹å³é”®ç§»åŠ¨
+
+;totalcmdÖĞÌØÊâµÄ°´×¡×ó¼üµãÓÒ¼üÒÆ¶¯
 ;#IfWinNotActive ahk_class TTOTAL_CMD
 ;~LButton & RButton::
-	;;opera ç­‰å°‘æ•°è½¯ä»¶ä¹‹ä¸­éƒ½å¯ä»¥æœ‰è‡ªå·±çš„æŒ‰ä½å·¦é”®ç‚¹å³é”®åŠŸèƒ½
+	;;opera µÈÉÙÊıÈí¼şÖ®ÖĞ¶¼¿ÉÒÔÓĞ×Ô¼ºµÄ°´×¡×ó¼üµãÓÒ¼ü¹¦ÄÜ
 	;if not WinActive("ahk_class OperaWindowClass") and not WinActive("GreenBrowser"){
 	;send ^w
 	;}
@@ -1633,22 +1642,22 @@ return
 
 
 
-;************** å¯åŠ¨ç¨‹åºå¿«æ·é”®ï¼ˆå»ºè®®ä¿®æ”¹ï¼‰ ************** {{{1
+;************** Æô¶¯³ÌĞò¿ì½İ¼ü£¨½¨ÒéĞŞ¸Ä£© ************** {{{1
 #h::run, cmd
-;ç®¡ç†å‘˜æƒé™cmd
+;¹ÜÀíÔ±È¨ÏŞcmd
 ^#h::run, *RunAs cmd
 #c::run %COMMANDER_PATH%\Tools\notepad\Notepad.exe /c
 
-;************** è®°äº‹æœ¬ ************** {{{1
+;************** ¼ÇÊÂ±¾ ************** {{{1
 
-;å¯åŠ¨è®°äº‹æœ¬å¹¶å»æ ‡é¢˜ç­‰ {{{3
+;Æô¶¯¼ÇÊÂ±¾²¢È¥±êÌâµÈ {{{3
 #n::
 	run %COMMANDER_PATH%\Tools\notepad\Notepad.exe /f %COMMANDER_PATH%\Tools\notepad\Lite.ini, , , OutputVarPID
 	sleep 100
 	WinWait ahk_pid %OutputVarPID%
 	if ErrorLevel
 	{
-		toolTip è¶…æ—¶äº†ï¼Œå†è¯•ä¸€ä¸‹ï¼Ÿ
+		toolTip ³¬Ê±ÁË£¬ÔÙÊÔÒ»ÏÂ£¿
 		sleep 2000
 		tooltip
 		return
@@ -1657,29 +1666,29 @@ return
 	{
 		PID = %OutputVarPID%
 		WinGet, ThisHWND, ID, ahk_pid %PID% 
-		;è®¾ç½®ä½ç½®å’Œå¤§å°, x,y,width,height
+		;ÉèÖÃÎ»ÖÃºÍ´óĞ¡, x,y,width,height
 		;WinMove, ahk_id %ThisHWND%,, 700,400,550,350
 		WinMove, ahk_id %ThisHWND%,, 700,600,310,144
 		;WinMove, ahk_pid %PID%,, 700,400,550,350
-		;å»æ ‡é¢˜
-		WinSet, Style, ^0xC00000, ahk_pid %PID%
-		;ä¸èƒ½æ”¹å˜å¤§å°
+		;È¥±êÌâ
+		;WinSet, Style, ^0xC00000, ahk_pid %PID%
+		;²»ÄÜ¸Ä±ä´óĞ¡
 		;WinSet, Style, ^0x40000, ahk_pid %PID%
-		;å»èœå•
+		;È¥²Ëµ¥
 		DllCall("SetMenu", "Ptr", ThisHWND, "Ptr", 0)
-		;é¡¶ç«¯
+		;¶¥¶Ë
 		;Winset, Alwaysontop, On,  ahk_pid %PID%
 	}
 return
 
-;å¯åŠ¨è®°äº‹æœ¬å¹¶å»æ ‡é¢˜ç­‰ï¼Œå¹¶æ”¶é›†å‰ªè´´æ¿ {{{3
+;Æô¶¯¼ÇÊÂ±¾²¢È¥±êÌâµÈ£¬²¢ÊÕ¼¯¼ôÌù°å {{{3
 ^#b::
 	run %COMMANDER_PATH%\Tools\notepad\Notepad.exe /b /f %COMMANDER_PATH%\Tools\notepad\Lite.ini, , , OutputVarPID
 	sleep 100
 	WinWait ahk_pid %OutputVarPID%
 	if ErrorLevel
 	{
-		toolTip è¶…æ—¶äº†ï¼Œå†è¯•ä¸€ä¸‹ï¼Ÿ
+		toolTip ³¬Ê±ÁË£¬ÔÙÊÔÒ»ÏÂ£¿
 		sleep 2000
 		tooltip
 		return
@@ -1688,30 +1697,30 @@ return
 	{
 		PID = %OutputVarPID%
 		WinGet, ThisHWND, ID, ahk_pid %PID% 
-		;è®¾ç½®ä½ç½®å’Œå¤§å°, x,y,width,height
+		;ÉèÖÃÎ»ÖÃºÍ´óĞ¡, x,y,width,height
 		;WinMove, ahk_id %ThisHWND%,, 700,400,550,350
 		WinMove, ahk_id %ThisHWND%,, 700,600,310,144
 		;WinMove, ahk_pid %PID%,, 700,400,550,350
-		;å»æ ‡é¢˜
-		WinSet, Style, ^0xC00000, ahk_pid %PID%
-		;ä¸èƒ½æ”¹å˜å¤§å°
+		;È¥±êÌâ
+		;WinSet, Style, ^0xC00000, ahk_pid %PID%
+		;²»ÄÜ¸Ä±ä´óĞ¡
 		;WinSet, Style, ^0x40000, ahk_pid %PID%
-		;å»èœå•
+		;È¥²Ëµ¥
 		DllCall("SetMenu", "Ptr", ThisHWND, "Ptr", 0)
-		;é¡¶ç«¯
+		;¶¥¶Ë
 		;Winset, Alwaysontop, On,  ahk_pid %PID%
 	}
 return
 
 
 
-;************** å°èœå•ä¾‹å­ ************** {{{2
-;å»ºè®®çš„ç»¿è‰²ä¾¿æºçš„å°èœå•ç¨‹åºPopSel
+;************** Ğ¡²Ëµ¥Àı×Ó ************** {{{2
+;½¨ÒéµÄÂÌÉ«±ãĞ¯µÄĞ¡²Ëµ¥³ÌĞòPopSel
 ;#z::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /pc /n 
 ;#RButton::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /n /i
 
-;************** å„ç¨‹åºå¿«æ·é”®æˆ–åŠŸèƒ½ ************** {{{1
-;è°ƒç”¨ä»»åŠ¡æ ç›¸å…³ç¨‹åºå¿«æ·é”® {{{2
+;************** ¸÷³ÌĞò¿ì½İ¼ü»ò¹¦ÄÜ ************** {{{1
+;µ÷ÓÃÈÎÎñÀ¸Ïà¹Ø³ÌĞò¿ì½İ¼ü {{{2
 `; & Tab::
 	;Totalcmd
 	send,#1
@@ -1728,7 +1737,7 @@ return
 return
 
 `; & w::
-	;å¾®ä¿¡
+	;Î¢ĞÅ
 	send,#4
 return
 
@@ -1745,34 +1754,68 @@ return
 return
 
 
-;æŠŠèµ„æºç®¡ç†å™¨ä¸­é€‰ä¸­çš„æ–‡ä»¶ç”¨tcæ‰“å¼€  {{{2
-;Win10çš„èµ„æºç®¡ç†å™¨
-;èµ„æºç®¡ç†å™¨
+;Ctrl+Alt+µã»÷£¬¶¨Î»³ÌĞò¶ÔÓ¦µÄÄ¿Â¼
+^!LButton::
+	Send {Click}
+	WinGet, ProcessPath, ProcessPath, A
+	;Run Explorer /select`, %ProcessPath%
+	run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="%ProcessPath%"
+	WinActivate, ahk_class TTOTAL_CMD
+return
+
+
+;°Ñ×ÊÔ´¹ÜÀíÆ÷ÖĞÑ¡ÖĞµÄÎÄ¼şÓÃtc´ò¿ª  {{{2
+;Win10µÄ×ÊÔ´¹ÜÀíÆ÷
+;×ÊÔ´¹ÜÀíÆ÷
 #If WinActive("ahk_class CabinetWClass") or WinActive("ahk_class ExploreWClass")
 {
 	!w::
+		if(TcExeFullPath="")
+			return
 		selected := Explorer_Get("",true)
+
+		;Èç¹ûÃ»ÓĞÑ¡ÖĞÎÄ¼ş£¬ÄÇ¾ÍÖ±½ÓÓÃµ±Ç°Ä¿Â¼
+		if(selected = "")
+		{
+			WinGetText, CurWinAllText
+			Loop, parse, CurWinAllText, `n, `r
+			{
+				If RegExMatch(A_LoopField, "^µØÖ·: "){
+					curWinPath := SubStr(A_LoopField,5)
+					break
+				}
+			}
+			selected := curWinPath
+		}
+
 		selected := """" selected """"
 		;msgbox % selected
-		if TcExeFullPath {
-			WinClose A  ;æŠŠå½“å‰èµ„æºç®¡ç†å™¨å…³é—­
-			run, %TcExeFullPath% /T /O /S /A /L=%selected%
-		}
+		WinClose A  ;°Ñµ±Ç°×ÊÔ´¹ÜÀíÆ÷¹Ø±Õ
+		run, %TcExeFullPath% /T /O /S /A /L=%selected%
 	return
 }
-;æ¡Œé¢
+;×ÀÃæ
 #If WinActive("ahk_class Progman") or WinActive("ahk_class WorkerW")
 {
 	!w::
+		if(TcExeFullPath="")
+			return
 		selected := Explorer_Get("",true)
-		selected := """" selected """"
-		if TcExeFullPath {
+		if(selected = ""){
+			selected := """" A_Desktop """"
+			run, %TcExeFullPath% /T /O /A /S /L=%selected%
+			sleep 200
+			selected := """" A_DesktopCommon """"
+			run, %TcExeFullPath% /T /O /A /S /R=%selected%
+		}
+		else{
+			selected := """" selected """"
 			run, %TcExeFullPath% /T /O /S /A /L=%selected%
 		}
 	return
 }
 
-;ç”¨åˆ°çš„å‡½æ•°
+;ÓÃµ½µÄº¯Êı
 Explorer_GetPath(hwnd="")
 {
 	if !(window := Explorer_GetWindow(hwnd))
@@ -1838,10 +1881,10 @@ Explorer_Get(hwnd="",selection=false)
 	return Trim(ret,"`n")
 }
 
-;QQ,Timä¸­å¿«é€Ÿå®šä½èŠå¤©ä½ç½® {{{2
+
+;QQ,TimÖĞ¿ìËÙ¶¨Î»ÁÄÌìÎ»ÖÃ {{{2
 #IfWinActive ahk_class TXGuiFoundation
 {
-
 	!1::CoordWinClick(Tim_Start_X, Tim_Start_Y+(1-1)*Tim_Bar_Height)
 	!2::CoordWinClick(Tim_Start_X, Tim_Start_Y+(2-1)*Tim_Bar_Height)
 	!3::CoordWinClick(Tim_Start_X, Tim_Start_Y+(3-1)*Tim_Bar_Height)
@@ -1853,24 +1896,24 @@ Explorer_Get(hwnd="",selection=false)
 	!9::CoordWinClick(Tim_Start_X, Tim_Start_Y+(9-1)*Tim_Bar_Height)
 	!0::CoordWinClick(Tim_Start_X, Tim_Start_Y+(10-1)*Tim_Bar_Height)
 
-	;å¿«é€Ÿåˆ°QQæ¥æ”¶çš„æ–‡ä»¶ç›®å½•ï¼Œè¯·è‡ªå·±ä¿®æ”¹å¯¹åº”ç›®å½•
-	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\My Documents\Tencent Files\ä½ çš„qqå·ç \FileRecv\"
+	;¿ìËÙµ½QQ½ÓÊÕµÄÎÄ¼şÄ¿Â¼£¬Çë×Ô¼ºĞŞ¸Ä¶ÔÓ¦Ä¿Â¼
+	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\My Documents\Tencent Files\ÄãµÄqqºÅÂë\FileRecv\"
 }
 
 
-;å¾®ä¿¡PCå®¢æˆ·ç«¯ {{{2
+;Î¢ĞÅPC¿Í»§¶Ë {{{2
 #IfWinActive ahk_exe WeChat.exe
 {
-	;èšç„¦æœç´¢æ¡†
+	;¾Û½¹ËÑË÷¿ò
 	!/::CoordWinClick(100,36)
-	;ç‚¹å‡»ç»¿è‰²èŠå¤©çš„æ•°å­—
+	;µã»÷ÂÌÉ«ÁÄÌìµÄÊı×Ö
 	!,::
 		CoordMode, Mouse, Window
 		click 28,90 2
 		Sleep,100
 		click 180,100
 	Return
-	;èšç„¦æ‰“å­—æ¡†
+	;¾Û½¹´ò×Ö¿ò
 	!`;::
 		WinGetPos, wxx, wxy,wxw,wxh, ahk_class WeChatMainWndForPC
 		wxw := wxw - 80
@@ -1889,11 +1932,21 @@ Explorer_Get(hwnd="",selection=false)
 	!9::CoordWinClick(WX_Start_X, WX_Start_Y+(9-1)*WX_Bar_Height)
 	!0::CoordWinClick(WX_Start_X, WX_Start_Y+(10-1)*WX_Bar_Height)
 
-	;å¿«é€Ÿåˆ°å¾®ä¿¡æ¥æ”¶çš„æ–‡ä»¶ç›®å½•ï¼Œè¯·è‡ªå·±ä¿®æ”¹å¯¹åº”ç›®å½•
+	;¿ìËÙµ½Î¢ĞÅ½ÓÊÕµÄÎÄ¼şÄ¿Â¼£¬Çë×Ô¼ºĞŞ¸Ä¶ÔÓ¦Ä¿Â¼
 	!f::
-		wx_path = % "D:\My Documents\WeChat Files\ä½ çš„å¾®ä¿¡ç›®å½•\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
+		wx_path = % "D:\My Documents\WeChat Files\ÄãµÄÎ¢ĞÅÄ¿Â¼\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
 		run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="%wx_path%"
 	return
+
+	;µãÓÒ¼üÑ¡É¾³ı
+	!d::
+		send,{RButton}
+		Sleep,200
+		send,{Up 2}{Enter}
+		Sleep,500
+		send,{Enter}
+	Return
+
 }
 
 
@@ -1913,8 +1966,8 @@ Explorer_Get(hwnd="",selection=false)
 	!0::CoordWinClick(TG_Start_X, TG_Start_Y+(10-1)*TG_Bar_Height)
 }
 
-;IDMçš„ä¸‹è½½å¯¹è¯æ¡†ä¸­ï¼Œæå–urlé“¾æ¥ï¼Œç„¶åç”¨MPCæ’­æ”¾ {{{2
-#IfWinActive ä¸‹è½½æ–‡ä»¶ä¿¡æ¯
+;IDMµÄÏÂÔØ¶Ô»°¿òÖĞ£¬ÌáÈ¡urlÁ´½Ó£¬È»ºóÓÃMPC²¥·Å {{{2
+#IfWinActive ÏÂÔØÎÄ¼şĞÅÏ¢
 	if WinActive ahk_class #32770{
 		RButton::
 			ControlGetText,Out,Edit1
@@ -1924,14 +1977,14 @@ Explorer_Get(hwnd="",selection=false)
 	}
 #IfWinActive
 
-;totalcmdä¸­å¿«æ·é”® {{{2
+;totalcmdÖĞ¿ì½İ¼ü {{{2
 #IfWinActive ahk_class TTOTAL_CMD
 	Escape & f4::SendInput,!{F3}
 
-	;é¿å…ä¸­æ–‡è¾“å…¥æ³•çš„é—®é¢˜
+	;±ÜÃâÖĞÎÄÊäÈë·¨µÄÎÊÌâ
 	,:: 
 		ControlGetFocus, TC_CurrentControl, A
-		;TInEdit1 åœ°å€æ å’Œé‡å‘½å Edit1 å‘½ä»¤è¡Œ
+		;TInEdit1 µØÖ·À¸ºÍÖØÃüÃû Edit1 ÃüÁîĞĞ
 		if (RegExMatch(TC_CurrentControl, "TMyListBox1|TMyListBox2"))
 			TcSendPos(524)   ;cm_ClearAll
 		else
@@ -1942,7 +1995,7 @@ Explorer_Get(hwnd="",selection=false)
 	   [:: send,{Home}{Down}
 	 */
 	;]:: send,{End}
-	;å¤åˆ¶åˆ°å¯¹é¢é€‰ä¸­ç›®å½•
+	;¸´ÖÆµ½¶ÔÃæÑ¡ÖĞÄ¿Â¼
 	^!F5::
 		send,{Tab}^+c{Tab}{F5}
 		Sleep,500
@@ -1950,7 +2003,7 @@ Explorer_Get(hwnd="",selection=false)
 		Sleep,500
 		send,{Enter 2}
 	return
-	;ç§»åŠ¨åˆ°å¯¹é¢é€‰ä¸­ç›®å½•
+	;ÒÆ¶¯µ½¶ÔÃæÑ¡ÖĞÄ¿Â¼
 	^!F6::
 		send,{Tab}^+c{Tab}{F6}
 		Sleep,500
@@ -1958,7 +2011,7 @@ Explorer_Get(hwnd="",selection=false)
 		Sleep,500
 		send,{Enter 2}
 	return
-	;åŠ ä¸Šå‰ªè´´æ¿ä¸­å†…å®¹æ”¹å
+	;¼ÓÉÏ¼ôÌù°åÖĞÄÚÈİ¸ÄÃû
 	^F2::
 		send,+{F6}
 		Sleep,300
@@ -1969,14 +2022,14 @@ Explorer_Get(hwnd="",selection=false)
 		send,{Enter}
 	return
 
-	;ä¸­é”®ç‚¹å‡»ï¼Œåœ¨æ–°å»ºæ ‡ç­¾ä¸­æ‰“å¼€
+	;ÖĞ¼üµã»÷£¬ÔÚĞÂ½¨±êÇ©ÖĞ´ò¿ª
 	MButton::
 		Send,{Click}
 		Sleep 50
 		TcSendPos(3003)
 	return
 
-	;åŒå‡»å³é”®ï¼Œå‘é€é€€æ ¼ï¼Œè¿”å›ä¸Šä¸€çº§ç›®å½•
+	;Ë«»÷ÓÒ¼ü£¬·¢ËÍÍË¸ñ£¬·µ»ØÉÏÒ»¼¶Ä¿Â¼
 	~RButton::
 		KeyWait,RButton
 		KeyWait,RButton, d T0.1
@@ -1995,39 +2048,50 @@ TcSendPos(Number)
     PostMessage 1075, %Number%, 0, , AHK_CLASS TTOTAL_CMD
 }
 
-#IfWinActive,æ‰¹é‡é‡å‘½å ahk_class TMultiRename
+#IfWinActive,ÅúÁ¿ÖØÃüÃû ahk_class TMultiRename
 {
 F1::Send,!p{tab}{enter}e
 }
 
-;excelä¸­ {{{2
+;excelÖĞ {{{2
 ;excel 2010: ahk_class bosa_sdm_XL9  excel2013: ahk_class XLMAIN ahk_exe C:\Windows\System32\Notepad.exe 
 #IfWinActive ahk_exe excel.exe 
 {
-	;å¤åˆ¶å•å…ƒæ ¼çº¯æ–‡æœ¬
+	;¸´ÖÆµ¥Ôª¸ñ´¿ÎÄ±¾
 	!c:: send,{F2}^+{Home}^c{Esc}
-	;ç­›é€‰
+	;É¸Ñ¡
 	f3::PostMessage, 0x111, 447, 0, , a   
-	;å®šä½
+	;¶¨Î»
 	!g::ControlClick, Edit1
-	;è¯¦ç»†ç¼–è¾‘
+	;ÏêÏ¸±à¼­
 	!;::
 		ControlClick, EXCEL<1
 		send,{Home}
 	return
-	;è‡ªè¡Œè°ƒæ•´è¡Œé«˜
+	;×ÔĞĞµ÷ÕûĞĞ¸ß
 	![::
-		ox := ComObjActive("Excel.Application")
-		ox.Application.Selection.EntireRow.AutoFit
+		try{
+			ox := ComObjActive("Excel.Application")
+			ox.Application.Selection.EntireRow.AutoFit
+		}
+		catch e{
+			;³ö´í¾ÍÓÃ´«Í³¿ì½İ¼ü
+			Send,!ora
+		}
 	return
-	;è‡ªè¡Œè°ƒæ•´åˆ—å®½
+	;×ÔĞĞµ÷ÕûÁĞ¿í
 	!]::
-		ox := ComObjActive("Excel.Application")
-		ox.Application.Selection.EntireColumn.AutoFit
+		try{
+			ox := ComObjActive("Excel.Application")
+			ox.Application.Selection.EntireColumn.AutoFit
+		}
+		catch e{
+			Send,!oca
+		}
 	return
 }
 
-;wordä¸­ {{{2
+;wordÖĞ {{{2
 ;word2013: ahk_class OpusApp
 #IfWinActive ahk_exe winword.exe
 {
@@ -2035,28 +2099,28 @@ F1::Send,!p{tab}{enter}e
 	CapsLock & p:: send,^{F6}
 }
 
-;å¿«é€Ÿç›®å½•åˆ‡æ¢ {{{2
-;æ”¶è—çš„ç›®å½•ï¼Œ
-;æœ€è¿‘ä½¿ç”¨çš„ç›®å½•
-;#IfWinActive å¦å­˜ä¸º ahk_class #32770
-;#If WinActive("å¦å­˜ä¸º ahk_class #32770") or WinActive("æ‰“å¼€ ahk_class #32770")
-;!f:: SendPath2Diag("å¦å­˜ä¸º","Edit1","d:\My Documents\æ¡Œé¢")
+;¿ìËÙÄ¿Â¼ÇĞ»» {{{2
+;ÊÕ²ØµÄÄ¿Â¼£¬
+;×î½üÊ¹ÓÃµÄÄ¿Â¼
+;#IfWinActive Áí´æÎª ahk_class #32770
+;#If WinActive("Áí´æÎª ahk_class #32770") or WinActive("´ò¿ª ahk_class #32770")
+;!f:: SendPath2Diag("Áí´æÎª","Edit1","d:\My Documents\×ÀÃæ")
 ;send,!n%2Path%{Enter}{Del}
 ;send,% text
-;ControlSetText, Edit1, "d:\My Documents\æ¡Œé¢",A
+;ControlSetText, Edit1, "d:\My Documents\×ÀÃæ",A
 ;ControlSetText, Edit1, cd %ThisMenuItem%, ahk_class TTOTAL_CMD
 #IfWinActive, ahk_group GroupDiagOpenAndSave
 	!w:: GoSub,Sub_SendCurDiagPath2Tc
 	!g:: GoSub,Sub_SendTcCurPath2Diag
 #IfWinActive
 
-;åœ¨TCä¸­æ‰“å¼€å¯¹è¯æ¡†çš„è·¯å¾„
+;ÔÚTCÖĞ´ò¿ª¶Ô»°¿òµÄÂ·¾¶
 Sub_SendCurDiagPath2Tc:
 	WinGetText, CurWinAllText
 	;MsgBox, The text is:`n%CurWinAllText%
 	Loop, parse, CurWinAllText, `n, `r
 	{
-		If RegExMatch(A_LoopField, "^åœ°å€: "){
+		If RegExMatch(A_LoopField, "^µØÖ·: "){
 			curDiagPath := SubStr(A_LoopField,4)
 			break
 		}
@@ -2067,13 +2131,13 @@ Sub_SendCurDiagPath2Tc:
 	ControlSend, Edit1, {enter}, ahk_class TTOTAL_CMD
 return
 
-;å°†tcä¸­è·¯å¾„å‘é€åˆ°å¯¹è¯æ¡†
+;½«tcÖĞÂ·¾¶·¢ËÍµ½¶Ô»°¿ò
 Sub_SendTcCurPath2Diag:
-	;å°†å‰ªè´´æ¿ä¸­å†…å®¹ä½œä¸ºæ–‡ä»¶å
+	;½«¼ôÌù°åÖĞÄÚÈİ×÷ÎªÎÄ¼şÃû
 	B_Clip2Name := false
 	B_ChangeDiagSize := true
 
-	;å…ˆè·å–TCä¸­å½“å‰è·¯å¾„
+	;ÏÈ»ñÈ¡TCÖĞµ±Ç°Â·¾¶
 	clip:=Clipboard
 	Clipboard =
     ;CM_CopySrcPathToClip 2029
@@ -2082,7 +2146,7 @@ Sub_SendTcCurPath2Diag:
 	srcDIR := Clipboard
 	Clipboard:=clip
 
-	;å†å‘é€å‰ªè´´æ¿è·¯å¾„åˆ°æ§ä»¶
+	;ÔÙ·¢ËÍ¼ôÌù°åÂ·¾¶µ½¿Ø¼ş
 	ControlFocus, Edit1, A
 	send,{Backspace}
 	sleep 100
@@ -2096,22 +2160,22 @@ Sub_SendTcCurPath2Diag:
 	;ControlSetText, Edit1, %text%,A
 	if(B_ChangeDiagSize){
 		;WinGetPos, xTB, yTB,lengthTB,hightTB, ahk_class Shell_TrayWnd
-		;æ”¹å˜å¯¹è¯æ¡†å¤§å°ï¼Œçœäº‹å°±ç›´æ¥ç§»åŠ¨åˆ°100,100çš„ä½ç½®ï¼Œç„¶å85%å±å¹•å¤§å°ï¼Œå¦åˆ™å°±è¦è¯¦ç»†ç»“ç®—ä»»åŠ¡æ åœ¨ä¸Šä¸‹å·¦å³çš„ä½ç½®
+		;¸Ä±ä¶Ô»°¿ò´óĞ¡£¬Ê¡ÊÂ¾ÍÖ±½ÓÒÆ¶¯µ½100,100µÄÎ»ÖÃ£¬È»ºó85%ÆÁÄ»´óĞ¡£¬·ñÔò¾ÍÒªÏêÏ¸½áËãÈÎÎñÀ¸ÔÚÉÏÏÂ×óÓÒµÄÎ»ÖÃ
 		WinMove, A,,80,80, A_ScreenWidth * 0.85, A_ScreenHeight * 0.85
 	}
 return
-;æ„å»ºå¯¹è¯æ¡†ä¸­èœå•
+;¹¹½¨¶Ô»°¿òÖĞ²Ëµ¥
 Sub_Menu2Diag:
-;å·¦è¾¹å†å²
-;å³è¾¹å†å²
+;×ó±ßÀúÊ·
+;ÓÒ±ßÀúÊ·
 ;hotdir
 return
 
 
-;Totalcmdå†å²è®°å½• {{{2
-;æ·»åŠ æŒ‰ç…§iniè¯»å–çš„å¯åŠ¨èœå•ï¼Œæ¥ç®¡`æŒ‰é”®
-;å‰ªè´´æ¿å¢å¼º
-;å›ºå®šæ–‡æœ¬æ¡ç›®å¢å¼º
+;TotalcmdÀúÊ·¼ÇÂ¼ {{{2
+;Ìí¼Ó°´ÕÕini¶ÁÈ¡µÄÆô¶¯²Ëµ¥£¬½Ó¹Ü`°´¼ü
+;¼ôÌù°åÔöÇ¿
+;¹Ì¶¨ÎÄ±¾ÌõÄ¿ÔöÇ¿
 ;#Persistent
 Sub_azHistory:
 
@@ -2122,12 +2186,12 @@ Sub_azHistory:
 
 	WinGet,exeName,ProcessName,A
 	WinGet,exeFullPath,ProcessPath,A
-	;D:\tools\totalcmd\TOTALCMD.EXE æ­£å¸¸å¤šæ•°æ˜¯è¿™ç§æƒ…å†µ
+	;D:\tools\totalcmd\TOTALCMD.EXE Õı³£¶àÊıÊÇÕâÖÖÇé¿ö
 
 	if(SubStr(exeFullPath,2,2)!=":\")
 	{
 		WinGet,pid,PID,A
-		;\Device\RAMDriv\totalcmd\TOTALCMD.EXE åœ¨å†…å­˜ç›˜ä¸Šæ˜¯
+		;\Device\RAMDriv\totalcmd\TOTALCMD.EXE ÔÚÄÚ´æÅÌÉÏÊÇ
 		sql = Select * from Win32_Process WHERE ProcessId = %pid%
 		for process in ComObjGet("winmgmts:").ExecQuery(sql)
 		{
@@ -2191,7 +2255,7 @@ Sub_azHistory:
         ControlGetFocus,TLB,ahk_class TTOTAL_CMD
         ControlGetPos,xn,yn,wn,,%TLB%,ahk_class TTOTAL_CMD
 
-        Menu, TC_azHistory, Add, å…³é—­%A_Tab%[& ],TC_azHistory_DeleteAll
+        Menu, TC_azHistory, Add, ¹Ø±Õ%A_Tab%[& ],TC_azHistory_DeleteAll
 		Menu, TC_azHistory, Show, %XN%, %YN%
     }
 return
@@ -2254,24 +2318,29 @@ MsgBox You selected %A_ThisMenuItem% from the menu %A_ThisMenu%.
 return
 
 
-CreatTrayMenu()
-{
-Menu,Tray,NoStandard
-Menu,Tray,add,é‡å¯(&R),Menu_Reload
-Menu,Tray,add
-Menu,Tray,add,æš‚åœçƒ­é”®(&S),Menu_Suspend
-Menu,Tray,add,æš‚åœè„šæœ¬(&A),Menu_Pause
-Menu,Tray,add,é€€å‡º(&X),Menu_Exit
-}
+CreatTrayMenu:
+	Menu,Tray,NoStandard
+	Menu,Tray,add,Spy(&D),Menu_Debug
+	Menu,Tray,add,ÖØÆô(&R),Menu_Reload
+	Menu,Tray,add
+	Menu,Tray,add,ÔİÍ£ÈÈ¼ü(&S),Menu_Suspend
+	Menu,Tray,add,ÔİÍ£½Å±¾(&A),Menu_Pause
+	Menu,Tray,add,ÍË³ö(&X),Menu_Exit
+return
+
+Menu_Debug:
+	run,AU3_Spy.exe
+return
+
 Menu_Reload:
 	Reload
 return
 Menu_Suspend:
-	Menu,tray,ToggleCheck,æš‚åœçƒ­é”®(&S)
+	Menu,tray,ToggleCheck,ÔİÍ£ÈÈ¼ü(&S)
 	Suspend
 return
 Menu_Pause:
-	Menu,tray,ToggleCheck,æš‚åœè„šæœ¬(&A)
+	Menu,tray,ToggleCheck,ÔİÍ£½Å±¾(&A)
 	Pause
 return
 Menu_Exit:
