@@ -56,10 +56,12 @@ SetControlDelay,0
 GroupAdd, group_browser,ahk_class IEFrame               ;IE
 GroupAdd, group_browser,ahk_class ApplicationFrameWindow ;Edge
 GroupAdd, group_browser,ahk_class MozillaWindowClass    ;Firefox
-GroupAdd, group_browser,ahk_class Chrome_WidgetWin_0    ;Chrome
-GroupAdd, group_browser,ahk_class Chrome_WidgetWin_1    ;Chrome
-GroupAdd, group_browser,ahk_class Chrome_WidgetWin_100  ;liebao
+GroupAdd, group_browser,ahk_exe chrome.exe               ;Chrome
+;GroupAdd, group_browser,ahk_class Chrome_WidgetWin_0    ;Chrome
+;GroupAdd, group_browser,ahk_class Chrome_WidgetWin_1    ;Chrome
+;GroupAdd, group_browser,ahk_class Chrome_WidgetWin_100  ;liebao
 GroupAdd, group_browser,ahk_class QQBrowser_WidgetWin_1
+
 
 GroupAdd, group_disableCtrlSpace, ahk_exe excel.exe
 GroupAdd, group_disableCtrlSpace, ahk_exe pycharm.exe
@@ -579,7 +581,9 @@ GetCursorShape(){   ;获取光标特征码 by nnrxin
     NumPut(20, PCURSORINFO, 0, "UInt")  ;*声明出 结构 的大小cbSize = 20字节
     DllCall("GetCursorInfo", "Ptr", &PCURSORINFO) ;获取 结构-光标信息
     if ( NumGet( PCURSORINFO, 4, "UInt")="0" ) ;当光标隐藏时，直接输出特征码为0
-        return, 0
+	{
+		return,0
+	}
     VarSetCapacity( ICONINFO, 20, 0) ;创建 结构-图标信息
     DllCall("GetIconInfo", "Ptr", NumGet(PCURSORINFO, 8), "Ptr", &ICONINFO)  ;获取 结构-图标信息
     VarSetCapacity( lpvMaskBits, 128, 0) ;创造 数组-掩图信息（128字节）
@@ -1782,8 +1786,8 @@ return
 	F2:: send,{Blind}^+{Tab}
 	F3:: send,{Blind}^{Tab}
 	F4:: SendInput,^w
-	`;:: 
-		;msgbox % GetCursorShape()
+	`;::
+		;tooltip % GetCursorshape() 
 		;64位的Win7下，在输入框中是148003967
 		If (GetCursorShape() = GV_CursorInputBox_64Win7)      ;I 型光标
 			SendInput,`;
@@ -2731,21 +2735,24 @@ ExitApp
 ; 自定义功能 {{{1
 ; 输入法切换 {{{2
 ; ~Escape::switchimei(0)
-Shift:: switchime(1)
-
+Shift:: switchime()
 switchime(ime := "A")
 {
+	global GV_ToggleIMEMode
     if (ime = 1)
-    {
-        DllCall("SendMessage", UInt, WinActive("A"), UInt, 80, UInt, 1, UInt, DllCall("LoadKeyboardLayout", Str,"00000804", UInt, 1))
-    }
-    else If (ime = 0)
-    {
-        DllCall("SendMessage", UInt, WinActive("A"), UInt, 80, UInt, 1, UInt, DllCall("LoadKeyboardLayout", Str,, UInt, 1))
-    }
-    Else If (ime = "A")
-    {
-        ;ime_status:=DllCall("GetKeyboardLayout","int",0,UInt)
-        Send, #{Space}
-    }
+		GV_ToggleIMEMode:="00000804"
+	else if (ime=0)
+		GV_ToggleIMEMode:=
+	else if (ime="A"){
+		if (GV_ToggleIMEMode="")
+			GV_ToggleIMEMode:="00000804"
+		else
+			GV_ToggleIMEMode:=
+	}
+	if (GV_ToggleIMEMode="")
+		desc:="切换输入法至：英文"
+	else
+		desc:="切换输入法至：中文"
+	tooltip %desc% 
+    DllCall("SendMessage", UInt, WinActive("A"), UInt, 80, UInt, 1, UInt, DllCall("LoadKeyboardLayout", Str,GV_ToggleIMEMode, UInt, 1))
 }
