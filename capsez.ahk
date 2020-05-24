@@ -1030,9 +1030,10 @@ Escape & Space:: WinMinimize A
 ^!+Escape:: SendInput,^!+{Escape}
 
 ;最后一行恢复自身功能，重要
-Escape::
+~Escape::
 	suspend permit
 	SendInput,{Escape}
+	switchime(0)
 return
 
 /*
@@ -1682,7 +1683,6 @@ LButton & WheelDown::AltTab
 #If
 
 
-
 ;************** 截图小功能 ************** {{{2
 >!Space::fun_NircmdScreenShot(1)
 ^PrintScreen::fun_NircmdScreenShot(0)
@@ -1939,13 +1939,14 @@ return
 
 ;************** 例子,建议从这里修改 ************** {{{1
 ;建议的绿色便携的小菜单程序PopSel
-;#z::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /pc /n 
+#z::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /pc /n 
 ;#RButton::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /n /i
 #h::run, cmd
 ;管理员权限cmd
 ^#h::run, *RunAs cmd
 #c::run %COMMANDER_PATH%\Tools\notepad\Notepad.exe /c
 #f::run %COMMANDER_PATH%\Everything.exe
+#p::run powershell 
 ;#F5::run winword.exe
 ;#F6::run excel.exe
 ;#F7::run powerpnt.exe
@@ -2134,7 +2135,7 @@ Explorer_Get(hwnd="",selection=false)
 	!-::CoordWinClick(Tim_Start_X, Tim_Start_Y+(11-1)*Tim_Bar_Height)
 	!=::CoordWinClick(Tim_Start_X, Tim_Start_Y+(12-1)*Tim_Bar_Height)
 	;!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /P=L /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
-	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
+	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\Document\Tencent Files\498459272\FileRecv\"
 }
 
 ;QQ
@@ -2153,7 +2154,7 @@ Explorer_Get(hwnd="",selection=false)
 	!-::CoordWinClick(QQ_Start_X, QQ_Start_Y+(11-1)*QQ_Bar_Height)
 	!=::CoordWinClick(QQ_Start_X, QQ_Start_Y+(12-1)*QQ_Bar_Height)
 	;!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /P=L /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
-	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
+	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\Document\Tencent Files\498459272\FileRecv\"
 }
 
 
@@ -2190,7 +2191,7 @@ Explorer_Get(hwnd="",selection=false)
 
 	;快速到微信接收的文件目录，请自己修改对应目录
 	!f::
-		wx_path = % "D:\My Documents\WeChat Files\你的微信目录\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
+		wx_path = % "D:\Document\WeChat Files\shtonyteng\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
 		run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="%wx_path%"
 	return
 
@@ -2236,6 +2237,7 @@ Explorer_Get(hwnd="",selection=false)
 
 ;totalcmd中快捷键 {{{2
 #IfWinActive ahk_class TTOTAL_CMD
+	!e::Send {F4} /*e key conflict with edit*/
 	Escape & f4::SendInput,!{F3}
 
 	;避免中文输入法的问题
@@ -2725,3 +2727,25 @@ ExitApp
 
 ; vim: textwidth=120 wrap tabstop=4 shiftwidth=4
 ; vim: foldmethod=marker fdl=0
+
+; 自定义功能 {{{1
+; 输入法切换 {{{2
+; ~Escape::switchimei(0)
+Shift:: switchime(1)
+
+switchime(ime := "A")
+{
+    if (ime = 1)
+    {
+        DllCall("SendMessage", UInt, WinActive("A"), UInt, 80, UInt, 1, UInt, DllCall("LoadKeyboardLayout", Str,"00000804", UInt, 1))
+    }
+    else If (ime = 0)
+    {
+        DllCall("SendMessage", UInt, WinActive("A"), UInt, 80, UInt, 1, UInt, DllCall("LoadKeyboardLayout", Str,, UInt, 1))
+    }
+    Else If (ime = "A")
+    {
+        ;ime_status:=DllCall("GetKeyboardLayout","int",0,UInt)
+        Send, #{Space}
+    }
+}
