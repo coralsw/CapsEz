@@ -56,10 +56,12 @@ SetControlDelay,0
 GroupAdd, group_browser,ahk_class IEFrame               ;IE
 GroupAdd, group_browser,ahk_class ApplicationFrameWindow ;Edge
 GroupAdd, group_browser,ahk_class MozillaWindowClass    ;Firefox
-GroupAdd, group_browser,ahk_class Chrome_WidgetWin_0    ;Chrome
-GroupAdd, group_browser,ahk_class Chrome_WidgetWin_1    ;Chrome
-GroupAdd, group_browser,ahk_class Chrome_WidgetWin_100  ;liebao
+GroupAdd, group_browser,ahk_exe chrome.exe               ;Chrome
+;GroupAdd, group_browser,ahk_class Chrome_WidgetWin_0    ;Chrome
+;GroupAdd, group_browser,ahk_class Chrome_WidgetWin_1    ;Chrome
+;GroupAdd, group_browser,ahk_class Chrome_WidgetWin_100  ;liebao
 GroupAdd, group_browser,ahk_class QQBrowser_WidgetWin_1
+
 
 GroupAdd, group_disableCtrlSpace, ahk_exe excel.exe
 GroupAdd, group_disableCtrlSpace, ahk_exe pycharm.exe
@@ -579,7 +581,9 @@ GetCursorShape(){   ;获取光标特征码 by nnrxin
     NumPut(20, PCURSORINFO, 0, "UInt")  ;*声明出 结构 的大小cbSize = 20字节
     DllCall("GetCursorInfo", "Ptr", &PCURSORINFO) ;获取 结构-光标信息
     if ( NumGet( PCURSORINFO, 4, "UInt")="0" ) ;当光标隐藏时，直接输出特征码为0
-        return, 0
+	{
+		return,0
+	}
     VarSetCapacity( ICONINFO, 20, 0) ;创建 结构-图标信息
     DllCall("GetIconInfo", "Ptr", NumGet(PCURSORINFO, 8), "Ptr", &ICONINFO)  ;获取 结构-图标信息
     VarSetCapacity( lpvMaskBits, 128, 0) ;创造 数组-掩图信息（128字节）
@@ -1030,9 +1034,10 @@ Escape & Space:: WinMinimize A
 ^!+Escape:: SendInput,^!+{Escape}
 
 ;最后一行恢复自身功能，重要
-Escape::
+~Escape::
 	suspend permit
 	SendInput,{Escape}
+	switchime(0)
 return
 
 /*
@@ -1682,7 +1687,6 @@ LButton & WheelDown::AltTab
 #If
 
 
-
 ;************** 截图小功能 ************** {{{2
 >!Space::fun_NircmdScreenShot(1)
 ^PrintScreen::fun_NircmdScreenShot(0)
@@ -1782,8 +1786,8 @@ return
 	F2:: send,{Blind}^+{Tab}
 	F3:: send,{Blind}^{Tab}
 	F4:: SendInput,^w
-	`;:: 
-		;msgbox % GetCursorShape()
+	`;::
+		;tooltip % GetCursorshape() 
 		;64位的Win7下，在输入框中是148003967
 		If (GetCursorShape() = GV_CursorInputBox_64Win7)      ;I 型光标
 			SendInput,`;
@@ -1939,13 +1943,14 @@ return
 
 ;************** 例子,建议从这里修改 ************** {{{1
 ;建议的绿色便携的小菜单程序PopSel
-;#z::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /pc /n 
+#z::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /pc /n 
 ;#RButton::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /n /i
 #h::run, cmd
 ;管理员权限cmd
 ^#h::run, *RunAs cmd
 #c::run %COMMANDER_PATH%\Tools\notepad\Notepad.exe /c
 #f::run %COMMANDER_PATH%\Everything.exe
+#p::run powershell 
 ;#F5::run winword.exe
 ;#F6::run excel.exe
 ;#F7::run powerpnt.exe
@@ -2134,7 +2139,7 @@ Explorer_Get(hwnd="",selection=false)
 	!-::CoordWinClick(Tim_Start_X, Tim_Start_Y+(11-1)*Tim_Bar_Height)
 	!=::CoordWinClick(Tim_Start_X, Tim_Start_Y+(12-1)*Tim_Bar_Height)
 	;!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /P=L /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
-	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
+	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\Document\Tencent Files\498459272\FileRecv\"
 }
 
 ;QQ
@@ -2153,7 +2158,7 @@ Explorer_Get(hwnd="",selection=false)
 	!-::CoordWinClick(QQ_Start_X, QQ_Start_Y+(11-1)*QQ_Bar_Height)
 	!=::CoordWinClick(QQ_Start_X, QQ_Start_Y+(12-1)*QQ_Bar_Height)
 	;!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /P=L /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
-	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
+	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\Document\Tencent Files\498459272\FileRecv\"
 }
 
 
@@ -2190,7 +2195,7 @@ Explorer_Get(hwnd="",selection=false)
 
 	;快速到微信接收的文件目录，请自己修改对应目录
 	!f::
-		wx_path = % "D:\My Documents\WeChat Files\你的微信目录\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
+		wx_path = % "D:\Document\WeChat Files\shtonyteng\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
 		run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="%wx_path%"
 	return
 
@@ -2236,6 +2241,7 @@ Explorer_Get(hwnd="",selection=false)
 
 ;totalcmd中快捷键 {{{2
 #IfWinActive ahk_class TTOTAL_CMD
+	!e::Send {F4} /*e key conflict with edit*/
 	Escape & f4::SendInput,!{F3}
 
 	;避免中文输入法的问题
@@ -2725,3 +2731,28 @@ ExitApp
 
 ; vim: textwidth=120 wrap tabstop=4 shiftwidth=4
 ; vim: foldmethod=marker fdl=0
+
+; 自定义功能 {{{1
+; 输入法切换 {{{2
+; ~Escape::switchimei(0)
+Shift:: switchime()
+switchime(ime := "A")
+{
+	global GV_ToggleIMEMode
+    if (ime = 1)
+		GV_ToggleIMEMode:="00000804"
+	else if (ime=0)
+		GV_ToggleIMEMode:=
+	else if (ime="A"){
+		if (GV_ToggleIMEMode="")
+			GV_ToggleIMEMode:="00000804"
+		else
+			GV_ToggleIMEMode:=
+	}
+	if (GV_ToggleIMEMode="")
+		desc:="切换输入法至：英文"
+	else
+		desc:="切换输入法至：中文"
+	tooltip %desc% 
+    DllCall("SendMessage", UInt, WinActive("A"), UInt, 80, UInt, 1, UInt, DllCall("LoadKeyboardLayout", Str,GV_ToggleIMEMode, UInt, 1))
+}
