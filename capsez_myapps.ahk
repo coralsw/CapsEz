@@ -11,3 +11,11 @@ write_trim:
 return
 
 
+excel_SortPowerTable:
+	ControlClick,Edit1,A
+	sleep,100
+	Send,A3:H40{Enter}
+	Sleep,100
+	Send,!hss
+return
+
