@@ -9,6 +9,12 @@
 ;v200401 添加不同程序中对应不同的小菜单，增强对话框，tab组合键等
 ;v210405 添加侧边键增强等等细节。
 ;v210601 继续添加对浏览器和播放器和侧边键鼠标的使用增强。
+;v210801 添加对IrfanView等程序的快捷键增强，改进调用启动器popsel的方式，其他小细节等
+;v211125 添加开启或关闭随系统自动启动，以及其他很小细节的优化
+;v220401 小细节优化
+;v220626 添加tc中数字键单击和双击效果，添加鼠标长按模式，添加everything中筛选器等，添加alt空格截图的开关，tc中alt+E为F4，中键改为在对侧面板新开标签，
+;v220629 修复启动的时候卡顿，以及卡键问题
+;v220710 优化tc中数字键双击和长按操作，优化微信接收文件等
 
 ;建议对“例子”位置进行自行修改
 
@@ -69,27 +75,18 @@ GroupAdd, group_disableCtrlSpace, ahk_exe excel.exe
 GroupAdd, group_disableCtrlSpace, ahk_exe pycharm.exe
 GroupAdd, group_disableCtrlSpace, ahk_exe SQLiteStudio.exe
 
-GroupAdd,GroupDiagOpenAndSave,Open ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,Save As ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,另存为 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,保存 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,复制 ahk_class #32770
 GroupAdd,GroupDiagOpenAndSave,新建 ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,选择 ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,保存 ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,另存 ahk_class #32770
 GroupAdd,GroupDiagOpenAndSave,打开 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,图形另存为 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,文件打开 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,保存副本 ahk_class #32770
 GroupAdd,GroupDiagOpenAndSave,上传 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,选择文件 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,打开文件 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,插入图片 ahk_class #32770
 GroupAdd,GroupDiagOpenAndSave,导入 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,置入嵌入对象 ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,插入 ahk_class #32770
 GroupAdd,GroupDiagOpenAndSave,浏览 ahk_class #32770
-GroupAdd,GroupDiagOpenAndSave,选择要比较的图形 ahk_class #32770
-SetTitleMatchMode RegEx ; 2019/10/16 增加正则组，方便调整
-GroupAdd, GroupDiagOpenAndSave, i).*(选择|Select|保存|上传|另存|打开).*(文件|files?|images?|图像|图形|program|程序) ahk_class #32770 ; 
-SetTitleMatchMode 2 ; 2019/10/16 正则定义结束，恢复普通匹配
+GroupAdd,GroupDiagOpenAndSave,Open ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,Save ahk_class #32770
+GroupAdd,GroupDiagOpenAndSave,Select ahk_class #32770
 
 
 ;GroupAdd, group_disableCtrlSpace, ahk_exe gvim.exe 
@@ -99,8 +96,10 @@ SetTitleMatchMode 2 ; 2019/10/16 正则定义结束，恢复普通匹配
 
 ;设定5分钟重启一次脚本，防止卡键 1000*60*15
 GV_ReloadTimer := % 1000*60*5
+GV_ToggleReload := 1
 Gosub,AutoReloadInit
 Gosub,CreatTrayMenu
+
 
 ;Esc键的作用，默认WinClose，作为alt+f4关闭程序，可选CapsLock，作为切换大小写
 ;GV_EscKeyAs := "WinClose"
@@ -109,7 +108,7 @@ Gosub,CreatTrayMenu
 GV_EscKeyAs := "Backspace"
 
 ;是否启用光标下滚轮
-GV_ToggleWheelOnCursor := 1
+GV_ToggleWheelOnCursor := 0
 
 ;tab系列组合键，适合左键右鼠，启用后直接按tab会感觉有一点延迟，默认开启，开关为ctrl+win+alt+花号
 GV_ToggleTabKeys := 1
@@ -120,11 +119,19 @@ GV_ToggleSpaceKeys := 0
 ;在浏览器中启用空格系列快捷键
 GV_GroupBrowserToggleSpaceKeys := 1
 
+;在浏览器中切换滚轮模式，开关默认为左边alt加空格
+GV_GroupBrowserToggleWheelMode := 0
+
+;在Totalcmd中使用数字键，单击快速打开，双击跳转
+GV_TotalcmdToggleJumpByNumber := 1
+
 ;单键模式，开关按键为caps+/
 GV_ToggleKeyMode := 0
 
 ;截图文件临时变量
 global SSFileName
+;截图的时候同时进剪贴板
+global GV_ScreenShot2Clip := 1
 
 ;64位的Win7下，在输入框中是148003967
 GV_CursorInputBox_64Win710 := 148003967
@@ -140,56 +147,33 @@ GV_CursorNormal := GV_CursorNormal_64Win710
 ;处于编辑状态
 GV_Edit_Mode := 0
 
-;如果是自己从tc中启动的本脚本，将会自动带上COMMANDER_PATH
-;但如果是别的地方，比如注册表的autorun环节先启动的本脚本，那么就有必要先设置这个变量
-;1、先启动脚本，正常是随系统自启动，那么COMMANDER_PATH为空
-;2、再启动tc，那么COMMANDER_PATH变量还是为空，可以读取运行中的exe路径
-;3、最后再是根据脚本所在目录中是否存在TOTALCMD.EXE或者TOTALCMD64.EXE
-COMMANDER_PATH := % GF_GetSysVar("COMMANDER_PATH")
-WinGet,TcExeFullPath,ProcessPath,ahk_class TTOTAL_CMD
-if !TcExeFullPath ;没tc在运行
-{
-	if A_Is64bitOS {
-		if FileExist(A_WorkingDir . "\" . "TOTALCMD64.EXE") {
-			TcExeFullPath := % A_WorkingDir . "\" . "TOTALCMD64.EXE"
-			COMMANDER_PATH := % A_WorkingDir
-			EnvSet,COMMANDER_PATH, A_WorkingDir
-		} else if FileExist(A_WorkingDir . "\" . "TOTALCMD.EXE") {
-			TcExeFullPath := % A_WorkingDir . "\" . "TOTALCMD.EXE"
-			COMMANDER_PATH := % A_WorkingDir
-			EnvSet,COMMANDER_PATH, A_WorkingDir
-		} else{
-			;toolTip 当前目录下没Totalcmd程序
-			;sleep 2000
-			;tooltip
-		}
-	}
-	else {
-		if FileExist(A_WorkingDir . "\" . "TOTALCMD.EXE") {
-			TcExeFullPath := A_WorkingDir . "\" . "TOTALCMD.EXE"
-			COMMANDER_PATH := % A_WorkingDir
-			EnvSet,COMMANDER_PATH, % A_WorkingDir
-		} else {
-			;toolTip 当前目录下没Totalcmd程序
-			;sleep 2000
-			;tooltip
-		}
-	}
+
+gv_url_tdx_f10 := "http://data.eastmoney.com/notices/stock/"
+gv_url_html := ".html"
+
+
+COMMANDER_PATH := % A_WorkingDir
+if A_Is64bitOS AND FileExist(A_WorkingDir . "\" . "TOTALCMD64.EXE") {
+		COMMANDER_NAME := "TOTALCMD64.EXE"
+} else{
+		COMMANDER_NAME := "TOTALCMD.EXE"
 }
-else{ ;有tc在运行
-	if(COMMANDER_PATH == A_WorkingDir) {
-		EnvSet,COMMANDER_PATH, % A_WorkingDir
-	}
-	else if !COMMANDER_PATH  ;但脚本先启动，比如随系统自启动，所以并没有COMMANDER_PATH变量
-	{
-		WinGet,TcExeName,ProcessName,ahk_class TTOTAL_CMD
-		StringTrimRight, COMMANDER_PATH, TcExeFullPath, StrLen(TcExeName)+1
-		EnvSet,COMMANDER_PATH, % COMMANDER_PATH
-	}
-}
+COMMANDER_EXE := COMMANDER_PATH . "\" . COMMANDER_NAME
+EnvSet,COMMANDER_PATH, %COMMANDER_PATH%
+EnvSet,COMMANDER_EXE, %COMMANDER_EXE%
 
 ;GV_ToolsPath := % GF_GetSysVar("ToolsPath")
 GV_TempPath := % GF_GetSysVar("TEMP")
+
+;绿软根目录SoftDir，默认在tc目录的上一层，这里是脚本内的环境变量，所有从ahk中启动的程序都会继承这个变量，
+;如果电脑相对固定，则可以考虑在右键菜单中选添加系统的环境变量固定下来
+;用EnvUpdate 会导致卡顿
+SOFTDIR := % GF_GetSysVar("SoftDir")
+if !SOFTDIR
+{
+	SOFTDIR := RegExReplace(A_ScriptDir,"\\[^\\]+\\?$")
+	EnvSet,SoftDir, % SOFTDIR
+}
 
 
 ;默认双击快捷键间隔175微秒
@@ -198,6 +182,9 @@ GV_MouseTimer := 400
 GV_KeyClickAction1 :=
 GV_KeyClickAction2 :=
 GV_KeyClickAction3 :=
+;长按的按钮，0为默认不管，1左键2右键3中键
+GV_MouseButton := 0
+GV_LongClickAction :=
 
 TC_Msg := 1075
 CM_OpenDrives := 2122
@@ -321,54 +308,100 @@ LinesPerNotch(MinLinesPerNotch, MaxLinesPerNotch, AccelerationThreshold, Acceler
 	Return Lines
 }
 
-;在任务栏上滚轮调整音量
+;在任务栏上滚轮调整音量 {{{2
 #If MouseIsOver("ahk_class Shell_TrayWnd") or MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
-WheelUp::Send,{Volume_Up}
-WheelDown::Send,{Volume_Down}
-MButton::Send,{Volume_Mute}
+	WheelUp::GoSub,Sub_volUp
+	WheelDown::GoSub,Sub_volDown
+
+	;中键静音	
+	MButton::GoSub,Sub_volMute
+
+	;启动svv
+	;~LButton::
+		;GV_LongClickAction := "GoSub,Sub_sv"
+		;GV_MouseButton := 1
+		;GoSub,Sub_ButtonLongPress
+	;return
 #if
+
+Sub_volDown:
+	SetTimer,SliderOff,2000
+	SoundSet,-2
+	Gosub,DisplaySlider
+Return
+
+Sub_volUp:
+	SetTimer,SliderOff,2000
+	SoundSet,+2
+	Gosub,DisplaySlider
+Return
+
+Sub_volMute:
+	SoundSet, +1, , mute
+return
+
+SliderOff:
+	Progress,Off
+Return
+
+DisplaySlider:
+	SoundGet,Volume
+	Volume:=Round(Volume)
+	Progress,%Volume%,%Volume%, ,音量大小
+Return
+
+Sub_sv:
+	Run, SndVol.exe
+return
+
+#IfWinActive ahk_exe SndVol.exe
+	RButton::WinClose A
+#IfWinActive
+
+Sub_svv:
+	Run, soundvolumeview.exe
+return
+
+#IfWinActive ahk_exe soundvolumeview.exe
+	MButton::SendInput, ^{6 10}
+	; 5%
+	k::SendInput, ^4
+	j::SendInput, ^3
+	WheelUp::SendInput, ^4
+	WheelDown::SendInput, ^3
+	; 1%
+	!k::SendInput, ^2
+	!j::SendInput, ^1
+	!WheelUp::SendInput, ^2
+	!WheelDown::SendInput, ^1
+	; 10%
+	^k::SendInput, ^4
+	^j::SendInput, ^3
+	^WheelUp::SendInput, ^4
+	^WheelDown::SendInput, ^3
+	; Toggle mute
+	m::SendInput, {F9}
+	Esc::SendInput, !fx
+
+	RButton::
+		GV_MouseTimer := 400
+		GV_KeyClickAction1 := "Send,{RButton}"
+		GV_KeyClickAction2 := "Send,!fx"
+		GoSub,Sub_MouseClick123
+	return
+
+#IfWinActive
+
+
+
 ;Win10里面已经不需要光标下滚轮这个功能
-
-#If GV_ToggleWheelOnCursor=1
-	WheelUp::
-		if A_OSVersion in WIN_2003,WIN_XP,WIN_7
-		{
-			FocuslessScroll(MinLinesPerNotch, MaxLinesPerNotch, AccelerationThreshold, AccelerationType, StutterThreshold)
-		}
-		else{
-			Send,{WheelUp}
-		}
-	return
-
-	^WheelUp::
-		if A_OSVersion in WIN_2003,WIN_XP,WIN_7
-		{
-			FocuslessScroll(MinLinesPerNotch, MinLinesPerNotch, AccelerationThreshold, AccelerationType, StutterThreshold)
-		}
-		else{
-			Send,^{WheelUp}
-		}
-	return
-
-	WheelDown::
-		if A_OSVersion in WIN_2003,WIN_XP,WIN_7
-		{
-			FocuslessScroll(MinLinesPerNotch, MaxLinesPerNotch, AccelerationThreshold, AccelerationType, StutterThreshold)
-		}
-		else{
-			Send,{WheelDown}
-		}
-	return
-
-	^WheelDown::
-		if A_OSVersion in WIN_2003,WIN_XP,WIN_7
-		{
-			FocuslessScroll(MinLinesPerNotch, MinLinesPerNotch, AccelerationThreshold, AccelerationType, StutterThreshold)
-		}
-		else{
-			Send,^{WheelDown}
-		}
-	return
+#If (GV_ToggleWheelOnCursor=1) and (A_OSVersion in WIN_2003,WIN_XP,WIN_7)
+WheelUp::FocuslessScroll(MinLinesPerNotch, MaxLinesPerNotch, AccelerationThreshold, AccelerationType, StutterThreshold)
+WheelDown::FocuslessScroll(MinLinesPerNotch, MaxLinesPerNotch, AccelerationThreshold, AccelerationType, StutterThreshold)
+^WheelUp::Send,^{WheelUp}
+^WheelDown::Send,^{WheelDown}
+!WheelUp::Send,!{WheelUp}
+!WheelDown::Send,!{WheelDown}
 #if
 
 ;************** 在光标下方滚轮结束 ************** {{{2
@@ -377,8 +410,34 @@ MButton::Send,{Volume_Mute}
 AutoReloadInit:
 	SetTimer, SelfReload, % GV_ReloadTimer
 return
+
 SelfReload:
-	reload
+	if GV_ToggleReload
+	{
+		;Send,{space up}
+		Send,{capslock up}
+
+		Send,{LWin Up}
+		Send,{RWin Up}
+
+		Send,{Shift Up}
+		Send,{LShift Up}
+		Send,{RShift Up}
+
+		Send,{Alt Up}
+		Send,{LAlt Up}
+		Send,{RAlt Up}
+
+		Send,{Control Up}
+		Send,{LControl Up}  
+		Send,{RControl Up}
+
+		Send,{Volume_Down Up}
+		Send,{Volume_Up Up}
+		;Send,{Volume_Mute Up}
+
+		reload
+	}
 return
 
 ;************** caps+鼠标滚轮调整窗口透明度^    ************** {{{1
@@ -508,8 +567,8 @@ LWin & MButton::Winset, Alwaysontop, toggle, A
 #w::WinClose A
 
 ;按住Win加滚轮来调整音量大小
-LWin & WheelUp::Send,{Volume_Up}
-LWin & WheelDown::Send,{Volume_Down}
+LWin & WheelUp::GoSub,Sub_volUp
+LWin & WheelDown::GoSub,Sub_volDown
 
 
 ;Escape & LButton::WinClose A
@@ -664,7 +723,29 @@ KeyWinC:
 	SetTimer, KeyWinC, off
 	if winc_presses = 1 ; 此键按下了一次.
 	{
-		fun_KeyClickAction123(GV_KeyClickAction1)
+		if GV_MouseButton = 0 
+		{
+			fun_KeyClickAction123(GV_KeyClickAction1)	
+		}
+		else {
+			MouseGetPos, x0, y0
+			if GV_MouseButton = 1
+				KeyWait, LButton, T0.4
+			else if GV_MouseButton = 2
+				KeyWait, RButton, T0.4
+			else if GV_MouseButton = 3
+				KeyWait, MButton, T0.4
+			MouseGetPos, x1, y1
+			If (ErrorLevel && (x0 = x1 && y0 = y1)) 
+			{
+				fun_KeyClickAction123(GV_LongClickAction)
+				;重置为0
+				GV_MouseButton = 0
+			}
+			else {
+				fun_KeyClickAction123(GV_KeyClickAction1)	
+			}
+		}
 	}
 	else if winc_presses = 2 ; 此键按下了两次.
 	{
@@ -701,6 +782,32 @@ fun_KeyClickAction123(act){
 	}
 }
 
+Sub_ButtonLongPress:
+	If ButtonLongPress { 
+		ButtonLongPress += 1
+		Return
+	}
+	ButtonLongPress = 1
+	;SetTimer, ButtonLongPress, -250
+	SetTimer, ButtonLongPress, % GV_MouseTimer
+Return
+
+ButtonLongPress:
+	IfEqual, ButtonLongPress, 1 
+	{
+		MouseGetPos, x0, y0
+		if GV_MouseButton = 1
+			KeyWait, LButton, T0.4
+		else if GV_MouseButton = 2
+			KeyWait, RButton, T0.4
+		else if GV_MouseButton = 3
+			KeyWait, MButton, T0.4
+		MouseGetPos, x1, y1
+		If (ErrorLevel && (x0 = x1 && y0 = y1))
+			fun_KeyClickAction123(GV_LongClickAction)
+	}
+	ButtonLongPress = 0
+Return
 
 ;%A_YYYY%-%A_MM%-%A_DD%-%A_MSec%
 ;msgbox % fun_GetFormatTime("yyyy-MM-dd-HH-mm-ss")
@@ -825,7 +932,11 @@ OpenClipURLS:
 		cu := A_LoopField
 		if(RegExMatch(A_LoopField,"^http")){
 			sleep 200
-			run, nircmd shexec open "%A_LoopField%"
+			run, "%A_LoopField%"
+		}
+		else if(RegExMatch(A_LoopField,"(^[a-zA-Z]:\\)|(^file:\/\/\/[a-zA-Z]:\/)")){
+			sleep 200
+			run,"%COMMANDER_EXE%" /A /T /O /S /L="%A_LoopField%"
 		}
 	}
 return
@@ -837,7 +948,7 @@ Sub_CopyAllVim:
 	SendInput,^{Home}^+{End}^c
 	sleep 500
 	if not WinExist("ahk_class Vim")
-		run %COMMANDER_PATH%\TOOLS\vim\gvim.exe, %COMMANDER_PATH%\TOOLS\vim
+		run %A_ScriptDir%\TOOLS\vim\gvim.exe, %A_ScriptDir%\TOOLS\vim
 	WinActivate
 	sleep 500
 	SendInput,{F1}^v
@@ -847,7 +958,7 @@ Sub_CopyVim:
 	SendInput,^c
 	sleep 500
 	if not WinExist("ahk_class Vim")
-		run %COMMANDER_PATH%\TOOLS\vim\gvim.exe, %COMMANDER_PATH%\TOOLS\vim
+		run %A_ScriptDir%\TOOLS\vim\gvim.exe, %A_ScriptDir%\TOOLS\vim
 	WinActivate
 	sleep 500
 	send,{Esc}
@@ -1141,10 +1252,10 @@ CapsLock & y:: Send {Click Right}
 CapsLock & 9::send,{Media_Prev}
 CapsLock & 0::send,{Media_Next}
 
-CapsLock & -::send,{Volume_Down}
-CapsLock & =::send,{Volume_Up}
+CapsLock & -::GoSub,Sub_volDown
+CapsLock & =::GoSub,Sub_volUp
+CapsLock & Del::GoSub,Sub_volMute
 
-CapsLock & Del::send,{Volume_Mute}
 CapsLock & backspace::send,{Media_Play_Pause}
 
 CapsLock & PgUp:: send,{Media_Prev}
@@ -1326,7 +1437,7 @@ Sub_OpenUrlByPlayer:
 	sleep,100
 	clip:=
 	clip:=clipboard
-	run,%COMMANDER_PATH%\Plugins\WLX\vlister\mpv.exe "%clip%"
+	run,%A_ScriptDir%\Plugins\WLX\vlister\mpv.exe "%clip%"
 return
 
 ;***************** 剪贴板相关$ **************
@@ -1346,7 +1457,6 @@ CapsLock & ,:: ShiftAltTab
 ;关闭窗口
 CapsLock & `;:: WinClose A
 
-
 ;enter 回车窗口最大化
 CapsLock & Enter:: GoSub,Sub_MaxRestore
 CapsLock & Space:: WinMinimize A
@@ -1359,69 +1469,14 @@ return
 
 ;+CapsLock:: CapsLock "之前的写法
 ;^PrintScreen::
-^CapsLock::  ; control + capslock to toggle capslock.  alwaysoff/on so that the key does not blink
+; control + capslock to toggle capslock.  alwaysoff/on so that the key does not blink
+^CapsLock::
+!CapsLock::
 	GetKeyState t, CapsLock, T
 	IfEqual t,D, SetCapslockState AlwaysOff
 	Else SetCapslockState AlwaysOn
 Return
 
-!CapsLock::SendInput,!{CapsLock}
-
-;************** Alttab相关 ************** {{{2
-;按住左键再进行滚轮，在AltaTab菜单中，可以点击右键或者按空格进行确认选择。
-;多用在把文件拖到别的程序中打开，或者类似于qq微信传文件。也可以将浏览器中的图片直接拖到文件管理器中保存
-LButton & WheelUp::ShiftAltTab
-LButton & WheelDown::AltTab
-;就没必要还用这个了
-;LWin & WheelUp::ShiftAltTab
-;LWin & WheelDown::AltTab
-
-;鼠标中操作
-#IfWinActive, ahk_class TaskSwitcherWnd
-	;Win10自己已经支持alttab中按空格选择程序
-	if A_OSVersion in WIN_2003, WIN_XP, WIN_7
-	{
-	!Space::send,{Alt Up}
-	Space::send,{Alt Up}
-	}
-	;在alttab的菜单中，点右键选中对应的程序
-	!RButton::send,{Alt Up}
-	~LButton & RButton::send,{Alt Up}
-
-	;alt+shift+tab，切换到上一个窗口功能，放在一起共用 TaskSwitcherWnd算了
-	;<+Tab::ShiftAltTab
-
-
-	;左手
-	!q::SendInput,{Blind}{Left}
-	;右手
-	!j::SendInput,{Blind}{Down}
-	!k::SendInput,{Blind}{Up}
-	!h::SendInput,{Blind}{Left}
-	!l::SendInput,{Blind}{Right}
-	!u::SendInput,{Blind}{End}
-	!i::SendInput,{Blind}{Home}
-	!,::SendInput,{Blind}{Left}
-	!.::SendInput,{Blind}{Right}
-#IfWinActive
-
-;Win10改成了MultitaskingViewFrame
-#IfWinActive, ahk_class MultitaskingViewFrame
-	!RButton::send,{Alt Up}
-	~LButton & RButton::send,{Alt Up}
-
-	;左手
-	!q::SendInput,{Blind}{Left}
-	;右手
-	!j::SendInput,{Blind}{Down}
-	!k::SendInput,{Blind}{Up}
-	!h::SendInput,{Blind}{Left}
-	!l::SendInput,{Blind}{Right}
-	!u::SendInput,{Blind}{End}
-	!i::SendInput,{Blind}{Home}
-	!,::SendInput,{Blind}{Left}
-	!.::SendInput,{Blind}{Right}
-#IfWinActive
 
 ;************** 分号;相关 ************** {{{2
 `; & j:: SendInput,{Blind}{Down}
@@ -1616,6 +1671,64 @@ return
 ;`::EzMenuShow()
 
 
+;************** Alttab相关 ************** {{{2
+;按住左键再进行滚轮，在AltaTab菜单中，可以点击右键或者按空格进行确认选择。
+;多用在把文件拖到别的程序中打开，或者类似于qq微信传文件。也可以将浏览器中的图片直接拖到文件管理器中保存
+LButton & WheelUp::ShiftAltTab
+LButton & WheelDown::AltTab
+;就没必要还用这个了
+;LWin & WheelUp::ShiftAltTab
+;LWin & WheelDown::AltTab
+
+;鼠标中操作
+#If WinActive("ahk_class TaskSwitcherWnd")
+{
+	;Win10自己已经支持alttab中按空格选择程序
+	if A_OSVersion in WIN_2003, WIN_XP, WIN_7
+	{
+		!Space::send,{Alt Up}
+		Space::send,{Alt Up}
+	}
+	;在alttab的菜单中，点右键选中对应的程序
+	!RButton::send,{Alt Up}
+	~LButton & RButton::send,{Alt Up}
+
+	;alt+shift+tab，切换到上一个窗口功能，放在一起共用 TaskSwitcherWnd算了
+	;<+Tab::ShiftAltTab
+
+
+	;左手
+	!q::SendInput,{Blind}{Left}
+	;右手
+	!j::SendInput,{Blind}{Down}
+	!k::SendInput,{Blind}{Up}
+	!h::SendInput,{Blind}{Left}
+	!l::SendInput,{Blind}{Right}
+	!u::SendInput,{Blind}{End}
+	!i::SendInput,{Blind}{Home}
+	!,::SendInput,{Blind}{Left}
+	!.::SendInput,{Blind}{Right}
+}
+
+;Win10改成了MultitaskingViewFrame,Win11改成了XamlExplorerHostIslandWindow
+#If WinActive("ahk_class MultitaskingViewFrame") or WinActive("ahk_class XamlExplorerHostIslandWindow") 
+{
+	!RButton::send,{Alt Up}
+	~LButton & RButton::send,{Alt Up}
+
+	;左手
+	!q::SendInput,{Blind}{Left}
+	;右手
+	!j::SendInput,{Blind}{Down}
+	!k::SendInput,{Blind}{Up}
+	!h::SendInput,{Blind}{Left}
+	!l::SendInput,{Blind}{Right}
+	!u::SendInput,{Blind}{End}
+	!i::SendInput,{Blind}{Home}
+	!,::SendInput,{Blind}{Left}
+	!.::SendInput,{Blind}{Right}
+}
+
 
 ;************** tab相关 ************** {{{2
 #If GV_ToggleTabKeys=1
@@ -1743,13 +1856,21 @@ fun_NircmdScreenShot(wd)
 {
 	;1 ActiveWin ,0 WholeDesktop
 	ScreenShotPath := "D:\"
-	if(wd==1){
+	if(wd = 1) {
 		SSFileName = % ScreenShotPath . "SSAW-" . fun_GetFormatTime( "yyyy-MM-dd HH-mm-ss" ) . ".png"
 		run nircmd savescreenshotwin "%SSFileName%"
+		if(GV_ScreenShot2Clip = 1){
+			sleep,1000
+			run,nircmd clipboard copyimage "%SSFileName%"
+		}
 	}
-	else{
+	else {
 		SSFileName = % ScreenShotPath . "SSWD-" .  fun_GetFormatTime( "yyyy-MM-dd HH-mm-ss" ) . ".png"
 		run nircmd savescreenshot "%SSFileName%"
+		if(GV_ScreenShot2Clip = 1){
+			sleep,1000
+			run,nircmd clipboard copyimage "%SSFileName%"
+		}
 	}
 	sleep,1000
 	EzTip(SSFileName,1)
@@ -1823,7 +1944,7 @@ return
 return
 
 ^!#r:: 
-	Reload
+	Gosub,SelfReload
 return
 
 ;解决Win10中任务栏无法切换的臭毛病
@@ -1837,20 +1958,29 @@ return
 	F2:: send,{Blind}^+{Tab}
 	F3:: send,{Blind}^{Tab}
 	F4:: SendInput,^w
-	`;:: 
-		;msgbox % GetCursorShape()
-		;64位的Win7下，在输入框中是148003967
-		If (GetCursorShape() = GV_CursorInputBox)      ;I 型光标
-			SendInput,`;
-		else 
-			Send {Click}
-	return
-	!`;:: Send {Click Right}
+
+	;`;:: 
+		;;msgbox % GetCursorShape()
+		;;64位的Win7下，在输入框中是148003967
+		;If (GetCursorShape() = GV_CursorInputBox)      ;I 型光标
+			;SendInput,`;
+		;else 
+			;Send {Click}
+	;return
+	;!`;:: Send {Click Right}
 	;^`;:: Send,`;
 
 
 	;按住左键点右键发送Ctrl+W关闭标签
 	~LButton & RButton:: send ^w
+
+
+	~LButton::
+		GV_LongClickAction := "SendInput,{MButton}"
+		GV_MouseButton := 1
+		GoSub,Sub_ButtonLongPress
+	return
+
 
 	XButton1 & RButton::SendInput,^c
 	XButton2 & RButton::SendInput,^c
@@ -1866,6 +1996,27 @@ return
 
 	XButton2::Send,{PgUp}
 	XButton1::Send,{PgDn}
+
+	;浏览器中切换滚轮模式，主要是方便看视频，西瓜和B站
+	!`:: 
+	<!Space::
+		GV_GroupBrowserToggleWheelMode := !GV_GroupBrowserToggleWheelMode
+		eztip("鼠标滚轮模式切换",1)
+	return
+
+	WheelUp::
+		if GV_GroupBrowserToggleWheelMode 
+			SendInput,{Blind}{Left}
+		else
+			SendInput,{WheelUp}
+	return
+	WheelDown::
+		if GV_GroupBrowserToggleWheelMode 
+			SendInput,{Blind}{Right}
+		else
+			SendInput,{WheelDown}
+	return
+
 #IfWinActive
 
 ;在浏览器中单独启用空格组合键
@@ -1993,7 +2144,7 @@ Sub_Idm2Mpv:
 		;ControlGetText,Out,Edit1,下载文件信息 ahk_class #32770 ahk_exe IDMan.exe
 		ControlGetText,Out,Edit1,下载文件信息 ahk_class #32770
 		WinClose,下载文件信息 ahk_class #32770
-		run,%COMMANDER_PATH%\Plugins\WLX\vlister\mpv.exe "%Out%"
+		run,%A_ScriptDir%\Plugins\WLX\vlister\mpv.exe "%Out%"
 	}
 return
 
@@ -2022,7 +2173,7 @@ return
 
 ;启动记事本并去标题等 {{{3
 #n::
-	run %COMMANDER_PATH%\Tools\notepad\Notepad.exe /f %COMMANDER_PATH%\Tools\notepad\Lite.ini, , , OutputVarPID
+	run %A_ScriptDir%\Tools\notepad\Notepad.exe /f %A_ScriptDir%\Tools\notepad\Lite.ini, , , OutputVarPID
 	sleep 100
 	WinWait ahk_pid %OutputVarPID%
 	if ErrorLevel
@@ -2053,7 +2204,7 @@ return
 
 ;启动记事本并去标题等，并收集剪贴板 {{{3
 ^#n::
-	run %COMMANDER_PATH%\Tools\notepad\Notepad.exe /b /f %COMMANDER_PATH%\Tools\notepad\Lite.ini, , , OutputVarPID
+	run %A_ScriptDir%\Tools\notepad\Notepad.exe /b /f %A_ScriptDir%\Tools\notepad\Lite.ini, , , OutputVarPID
 	sleep 100
 	WinWait ahk_pid %OutputVarPID%
 	if ErrorLevel
@@ -2086,13 +2237,38 @@ return
 
 ;************** 例子,建议从这里修改 ************** {{{1
 ;建议的绿色便携的小菜单程序PopSel
-#z::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /pc /n 
-#RButton::run %COMMANDER_PATH%\Tools\popsel\PopSel.exe /n /i
+;#z::
+	;run %A_ScriptDir%\Tools\popsel\PopSel.exe /pc /T500
+	;sleep 500
+	;MyWinWaitActive("PopSel - ahk_class WindowClass_0")
+;return
+
+;#RButton::
+	;run %A_ScriptDir%\Tools\popsel\PopSel.exe /i /T500
+	;sleep 500
+	;MyWinWaitActive("PopSel - ahk_class WindowClass_0")
+;return
+
+;建议的绿色便携的小菜单程序Qsel，这两个二选一即可
+#z::
+	run,"%A_ScriptDir%\Tools\qsel\Qsel.exe", %A_ScriptDir%\Tools\qsel
+	sleep 500
+	MyWinWaitActive("Qsel  ahk_class WindowClass_0")
+return
+
+#RButton::
+	run,"%A_ScriptDir%\Tools\qsel\Qsel.exe", %A_ScriptDir%\Tools\qsel
+	sleep 500
+	MyWinWaitActive("Qsel  ahk_class WindowClass_0")
+return
+
+
 #h::run, cmd
 ;管理员权限cmd
 ^#h::run, *RunAs cmd
-#c::run %COMMANDER_PATH%\Tools\notepad\Notepad.exe /c
-#f::run %COMMANDER_PATH%\Everything.exe
+#c::run %A_ScriptDir%\Tools\notepad\Notepad.exe /c
+#f:: run %A_ScriptDir%\Everything.exe
+
 #F5::run winword.exe
 #F6::run excel.exe
 #F7::run powerpnt.exe
@@ -2155,7 +2331,7 @@ return
 	Send {Click}
 	WinGet, ProcessPath, ProcessPath, A
 	;Run Explorer /select`, %ProcessPath%
-	run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="%ProcessPath%"
+	run,"%COMMANDER_EXE%" /T /O /S /L="%ProcessPath%"
 	WinActivate, ahk_class TTOTAL_CMD
 return
 
@@ -2165,7 +2341,7 @@ return
 #If WinActive("ahk_class CabinetWClass") or WinActive("ahk_class ExploreWClass")
 {
 	!w::
-		if(TcExeFullPath="")
+		if(COMMANDER_EXE="")
 			return
 		selected := Explorer_Get("",true)
 
@@ -2186,26 +2362,26 @@ return
 		selected := """" selected """"
 		;msgbox % selected
 		WinClose A  ;把当前资源管理器关闭
-		run, %TcExeFullPath% /T /O /S /A /L=%selected%
+		run, %COMMANDER_EXE% /T /O /S /A /L=%selected%
 	return
 }
 ;桌面
 #If WinActive("ahk_class Progman") or WinActive("ahk_class WorkerW")
 {
 	!w::
-		if(TcExeFullPath="")
+		if(COMMANDER_EXE="")
 			return
 		selected := Explorer_Get("",true)
 		if(selected = ""){
 			selected := """" A_Desktop """"
-			run, %TcExeFullPath% /T /O /A /S /L=%selected%
+			run, %COMMANDER_EXE% /T /O /A /S /L=%selected%
 			sleep 200
 			selected := """" A_DesktopCommon """"
-			run, %TcExeFullPath% /T /O /A /S /R=%selected%
+			run, %COMMANDER_EXE% /T /O /A /S /R=%selected%
 		}
 		else{
 			selected := """" selected """"
-			run, %TcExeFullPath% /T /O /S /A /L=%selected%
+			run, %COMMANDER_EXE% /T /O /S /A /L=%selected%
 		}
 	return
 }
@@ -2298,8 +2474,12 @@ Explorer_Get(hwnd="",selection=false)
 	!0::CoordWinClick(Tim_Start_X, Tim_Start_Y+(10-1)*Tim_Bar_Height)
 	!-::CoordWinClick(Tim_Start_X, Tim_Start_Y+(11-1)*Tim_Bar_Height)
 	!=::CoordWinClick(Tim_Start_X, Tim_Start_Y+(12-1)*Tim_Bar_Height)
-	;!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /P=L /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
-	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
+	!f::
+		;这里改成自己对应的路径
+		run,"%COMMANDER_EXE%" /T /O /S /L="D:\My Documents\Tencent Files\123456789自己的qq号码\FileRecv\"
+		sleep 500
+		MyWinWaitActive("ahk_class TTOTAL_CMD")
+	return
 }
 
 ;QQ
@@ -2317,8 +2497,12 @@ Explorer_Get(hwnd="",selection=false)
 	!0::CoordWinClick(QQ_Start_X, QQ_Start_Y+(10-1)*QQ_Bar_Height)
 	!-::CoordWinClick(QQ_Start_X, QQ_Start_Y+(11-1)*QQ_Bar_Height)
 	!=::CoordWinClick(QQ_Start_X, QQ_Start_Y+(12-1)*QQ_Bar_Height)
-	;!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /P=L /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
-	!f::run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="D:\My Documents\Tencent Files\123456789\FileRecv\"
+	!f::
+		;这里改成自己对应的路径
+		run,"%COMMANDER_EXE%" /T /O /S /L="D:\My Documents\Tencent Files\123456789自己的qq号码\FileRecv\"
+		sleep 500
+		MyWinWaitActive("ahk_class TTOTAL_CMD")
+	return
 }
 
 
@@ -2353,10 +2537,25 @@ Explorer_Get(hwnd="",selection=false)
 	!9::CoordWinClick(WX_Start_X, WX_Start_Y+(9-1)*WX_Bar_Height)
 	!0::CoordWinClick(WX_Start_X, WX_Start_Y+(10-1)*WX_Bar_Height)
 
-	;快速到微信接收的文件目录，请自己修改对应目录
+	;这里请修改everything中的书签，确保ev中书签名字保持一致
+	!e::
+		run, "%A_ScriptDir%\everything.exe" -bookmark wechatfile
+	return
+	;这里请修改tc中搜索条件的目录位置 改成自己的 ，
+
+	;将tc中默认D:\My Documents\WeChat Files\corals\FileStorage\MsgAttach改成自己的MsgAttac所在目录全路径
 	!f::
-		wx_path = % "D:\My Documents\WeChat Files\你的微信目录\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
-		run,"%COMMANDER_PATH%\totalcmd.EXE" /T /O /S /L="%wx_path%"
+		;wx_path = % "D:\My Documents\WeChat Files\corals\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
+		;run,"%COMMANDER_EXE%" /T /O /S /L="%wx_path%"
+		;sleep 500
+		;MyWinWaitActive("ahk_class TTOTAL_CMD")
+
+		MyWinWaitActive("ahk_class TTOTAL_CMD")
+		TcSendUserCommand("em_loadSearchWechatFile")
+		Sleep,500
+		send,!s
+		Sleep,2000
+		send,!l
 	return
 
 	;点右键选删除
@@ -2377,11 +2576,95 @@ Explorer_Get(hwnd="",selection=false)
 }
 
 
+;微信
 ;#If WinActive("图片查看 ahk_exe WeChat.exe")
-#IfWinActive 图片查看 ahk_class ImagePreviewWnd
+#If WinActive("图片查看 ahk_class ImagePreviewWnd") or WinActive("微信 ahk_class ImagePreviewLayerWnd")
 {
 	XButton1::Send,{Right}
 	XButton2::Send,{Left}
+	!WheelUp::Send,{Left}
+	!WheelDown::Send,{Right}
+	space & WheelUp::Send,{Left}
+	space & WheelDown::Send,{Right}
+
+	h::send,{Left}
+	l::send,{Right}
+	a::send,{Left}
+	d::send,{Right}
+
+	`;::send,{Esc}
+
+	;双击右键关闭
+	RButton::
+		GV_MouseTimer := 400
+		GV_KeyClickAction1 := "Send,{RButton}"
+		GV_KeyClickAction2 := "Send,{Escape}"
+		GV_MouseButton := 2
+		GV_LongClickAction := "Send,{Escape}"
+		GoSub,Sub_MouseClick123
+	return
+
+	Enter:: GoSub,Sub_MaxRestore
+	;对视频内容点击播放
+	space:: 
+		WinGetPos, x, y,lengthA,hightA, A
+		;MouseMove, % lengthA/2 ,hightA/2
+		CoordWinClick(lengthA/2,hightA/2)
+	return
+
+}
+
+;微信中的页面
+#IfWinActive 微信 ahk_class CefWebViewWnd
+{
+	j::send,{PgDn}
+	k::send,{PgUp}
+	u::send,{End}
+	i::send,{Home}
+	`;::send,{Esc}
+	RButton::
+		GV_MouseTimer := 400
+		GV_KeyClickAction1 := "Send,{RButton}"
+		GV_KeyClickAction2 := "Send,{Escape}"
+		GV_MouseButton := 2
+		GV_LongClickAction := "Send,{Escape}"
+		GoSub,Sub_MouseClick123
+	return
+}
+
+;微信聊天记录
+#IfWinActive ahk_class FileManagerWnd ahk_exe WeChat.exe
+{
+	`;::send,{Esc}
+	RButton::
+		GV_MouseTimer := 400
+		GV_KeyClickAction1 := "Send,{RButton}"
+		GV_KeyClickAction2 := "Send,{Escape}"
+		GV_MouseButton := 2
+		GV_LongClickAction := "Send,{Escape}"
+		GoSub,Sub_MouseClick123
+	return
+}
+
+;微信中转发的聊天记录
+#IfWinActive ahk_class ChatRecordWnd
+{
+	`;::send,{Esc}
+	RButton::
+		GV_MouseTimer := 400
+		GV_KeyClickAction1 := "Send,{RButton}"
+		GV_KeyClickAction2 := "Send,{Escape}"
+		GV_MouseButton := 2
+		GV_LongClickAction := "Send,{Escape}"
+		GoSub,Sub_MouseClick123
+	return
+}
+
+;QQ Tim中查看照片
+#If WinActive("图片查看 ahk_class TXGuiFoundation")
+{
+	XButton1::Send,{Left}
+	XButton2::Send,{Right}
 	!WheelUp::Send,{Left}
 	!WheelDown::Send,{Right}
 
@@ -2398,7 +2681,12 @@ Explorer_Get(hwnd="",selection=false)
 		GV_KeyClickAction2 := "Send,{Escape}"
 		GoSub,Sub_MouseClick123
 	return
+}
 
+;F4menu中
+#If WinActive("F4Menu ahk_class F4Menu")
+{
+	space:: Send,{Enter}
 }
 
 ;telegram {{{2
@@ -2424,12 +2712,34 @@ Explorer_Get(hwnd="",selection=false)
 			ControlGetText,Out,Edit1
 			WinClose A
 			;run,%COMMANDER_PATH%\Tools\MPC\mpc.exe "%Out%"
-			run,%COMMANDER_PATH%\Plugins\WLX\vlister\mpv.exe "%Out%"
+			run,%A_ScriptDir%\Plugins\WLX\vlister\mpv.exe "%Out%"
 		return
 	}
 #IfWinActive
 
 
+;IDM的下载完成对话框中，提取文件信息，然后跳转到tc
+#If WinActive("下载完成 ahk_class #32770 ahk_exe IDMan.exe")
+{
+	!g::
+	RButton::
+		ControlGetText,Out,Edit4
+		WinClose A
+		run,"%COMMANDER_EXE%" /A /T /O /S /L="%Out%"
+		sleep 500
+		MyWinWaitActive("ahk_class TTOTAL_CMD")
+	return
+}
+
+;IDM界面
+#If WinActive("Internet Download Manager ahk_class #32770 ahk_exe IDMan.exe")
+{
+	!f::
+		run,"%COMMANDER_EXE%" /T /O /S /L="D:\Downloads\IDM\"
+		sleep 500
+		MyWinWaitActive("ahk_class TTOTAL_CMD")
+	return
+}
 
 
 TC_Focus_Edit(){
@@ -2448,12 +2758,48 @@ fun_TCselectFileByNum(n){
 		Sendinput,%n%
 	}
 	else {
-		Sendinput,{Home}
-		Sleep,200
-		Sendinput,{Down %n%}
+		;如果是0就获取总共几个
+		if(n=0) {
+			;1000 to get active panel: 1=left, 2=right (32/64)
+			tcLeftRight := fun_TcGet(1000)
+			sMsg := % 1000 + tcLeftRight
+			;1001/1002 to get number of items in left/right list (32/64)
+			n := fun_TcGet(sMsg) - 1
+		}
+		ControlGetFocus, Ctrl, AHK_CLASS TTOTAL_CMD
+		Postmessage, 0x19E, %n%, 1, %Ctrl%, AHK_CLASS TTOTAL_CMD
 		Sendinput,{Enter}
 	}
 }
+
+;判断当前tc中是否正在显示着收藏夹菜单
+fun_TcExistHotMenu(){
+	Dlg_HWnd := WinExist("ahk_class #32768 ahk_exe TOTALCMD.EXE")
+	return Dlg_HWnd
+}
+
+fun_TcGet(n)
+{
+	SendMessage,1074, %n%, 0, , Ahk_class TTOTAL_CMD
+	return % ErrorLevel
+}
+
+ClickAndLongClick(timeout = 200) { ;
+   tout := timeout/1000
+   key := RegExReplace(A_ThisHotKey,"[\*\~\$\#\+\!\^]")
+   Loop {
+	  t := A_TickCount
+	  KeyWait %key%
+	  Pattern .= A_TickCount-t > timeout
+	  KeyWait %key%,DT%tout%
+	  If (ErrorLevel)
+		 Return Pattern
+   }
+}
+;0单击
+;00双击
+;01就短按+长按
+;001就是双击+长按
 
 
 Sub_TcSrcActivateLastTab:
@@ -2461,38 +2807,116 @@ Sub_TcSrcActivateLastTab:
 	TcSendPos(3006)
 return
 
+;TC备注中快速星号评级
+#IfWinActive 文件备注 ahk_class TCmtEditForm ahk_exe totalcmd.exe 
+{
+!0::
+!1::
+!2::
+!3::
+!4::
+!5::
+	ControlFocus, TMyMemo1
+	ControlGetText, preText, TMyMemo1
+	cnt := SubStr(A_ThisHotkey,2)
+	text := StrRepeat("★", cnt) . StrRepeat("☆", 5-cnt)
+	if StrLen(preText) >0 
+		text .=  "`r`n" preText
+	ControlSetText,  TMyMemo1, %text%
+	return
+}
+StrRepeat(str, count){
+	res = 
+	Loop, % count{
+		res .= str
+	} 
+	Return res
+}
+
+
 ;Totalcmd中快搜
 #IfWinActive QUICKSEARCH ahk_class TQUICKSEARCH
 {
-	Tab & 1::
+	;快搜输入框中不能直接数字，就用空格加数字，也可以先按caps取消输入框状态再单独按数字
+	;眼睛适合辨认的也就前5
+	Space & 1::
 		Sendinput,{Esc}
 		Sleep,100
 		fun_TCselectFileByNum(1)
 	Return
-	Tab & 2::
+	Space & 2::
 		Sendinput,{Esc}
 		Sleep,100
 		fun_TCselectFileByNum(2)
 	Return
-	Tab & 3::
+	Space & 3::
 		Sendinput,{Esc}
 		Sleep,100
 		fun_TCselectFileByNum(3)
 	Return
-	Tab & 4::
+	Space & 4::
 		Sendinput,{Esc}
 		Sleep,100
 		fun_TCselectFileByNum(4)
 	Return
-	Tab & 5::
+	Space & 5::
 		Sendinput,{Esc}
 		Sleep,100
 		fun_TCselectFileByNum(5)
 	Return
+	Space & 6::
+		Sendinput,{Esc}
+		Sleep,100
+		fun_TCselectFileByNum(6)
+	Return
+	Space & 7::
+		Sendinput,{Esc}
+		Sleep,100
+		fun_TCselectFileByNum(7)
+	Return
+	Space & 8::
+		Sendinput,{Esc}
+		Sleep,100
+		fun_TCselectFileByNum(8)
+	Return
+	Space & 9::
+		Sendinput,{Esc}
+		Sleep,100
+		fun_TCselectFileByNum(9)
+	Return
+	Space & 0::
+		Sendinput,{Esc}
+		Sleep,100
+		fun_TCselectFileByNum(0)
+	Return
+
+	;左手alt+e作为F4
+	!e::
+		BlockInput On
+		Sendinput,{Esc}
+		Sleep,100
+		Sendinput,{Alt up}
+		Sendinput,{F4}
+		BlockInput Off
+	return
+
+	;避免聚焦在输入框中而无法生效
+	`;::
+		Sendinput,{Esc}
+		Sleep,100
+		Sendinput,{F4}
+	return
+
+	CapsLock & Enter::return
+	CapsLock & Space::return
+
+	Space::send,{space}
+	^Space::^Space
+	+Space::+Space
 }
 
 
-;totalcmd中快捷键 {{{2
+;eztc totalcmd中快捷键 {{{2
 #IfWinActive ahk_class TTOTAL_CMD
 	Escape & f4::SendInput,!{F3}
 
@@ -2502,65 +2926,209 @@ return
 ;tc中使用数字按键来进行快速打开和快速切换标签
 ;开启之后如需继续使用快搜，那快搜起始键不能是数字，
 ;需要打开或关闭直接修改下行的注释即可
-;	1::
-;		GV_KeyClickAction1 := "GoFun,fun_TCselectFileByNum(1)"
-;		GV_KeyClickAction2 := "GoFun,TcSendPos(5001)"
-;		GoSub,Sub_KeyClick123
-;	return
-;
-;	2::
-;		GV_KeyClickAction1 := "GoFun,fun_TCselectFileByNum(2)"
-;		GV_KeyClickAction2 := "GoFun,TcSendPos(5002)"
-;		GoSub,Sub_KeyClick123
-;	return
-;
-;	3::
-;		GV_KeyClickAction1 := "GoFun,fun_TCselectFileByNum(3)"
-;		GV_KeyClickAction2 := "GoFun,TcSendPos(5003)"
-;		GoSub,Sub_KeyClick123
-;	return
-;
-;	4::
-;		GV_KeyClickAction1 := "GoFun,fun_TCselectFileByNum(4)"
-;		GV_KeyClickAction2 := "GoFun,TcSendPos(5004)"
-;		GoSub,Sub_KeyClick123
-;	return
-;
-;	5::
-;		GV_KeyClickAction1 := "GoFun,fun_TCselectFileByNum(5)"
-;		GV_KeyClickAction2 := "GoFun,TcSendPos(5005)"
-;		GoSub,Sub_KeyClick123
-;	return
-;
-;	6::
-;		GV_KeyClickAction1 := "GoFun,fun_TCselectFileByNum(6)"
-;		GV_KeyClickAction2 := "GoFun,TcSendPos(5006)"
-;		GoSub,Sub_KeyClick123
-;	return
-;
-;	7::
-;		GV_KeyClickAction1 := "GoFun,fun_TCselectFileByNum(7)"
-;		GV_KeyClickAction2 := "GoFun,TcSendPos(5007)"
-;		GoSub,Sub_KeyClick123
-;	return
-;
-;	8::
-;		GV_KeyClickAction1 := "GoFun,fun_TCselectFileByNum(8)"
-;		GV_KeyClickAction2 := "GoFun,TcSendPos(5008)"
-;		GoSub,Sub_KeyClick123
-;	return
-;
-;	9::
-;		GV_KeyClickAction1 := "GoFun,fun_TCselectFileByNum(9)"
-;		GV_KeyClickAction2 := "GoFun,TcSendPos(5009)"
-;		GoSub,Sub_KeyClick123
-;	return
-;
-;	0::
-;		GV_KeyClickAction1 := "Sendinput,{End}{Enter}"
-;		GV_KeyClickAction2 := "GoSub,Sub_TcSrcActivateLastTab"
-;		GoSub,Sub_KeyClick123
-;	return
+
+	^!+d::
+		GV_TotalcmdToggleJumpByNumber := !GV_TotalcmdToggleJumpByNumber
+		if(GV_TotalcmdToggleJumpByNumber == 1)
+			tooltip 已启用TC中数字键跳转功能
+		else
+			tooltip 已关闭TC中数字键跳转功能
+		sleep 2000
+		tooltip
+	return
+
+	1::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,1
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(1)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5001)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5001)
+				TcSendPos(2001)
+			}
+		}
+	return
+
+	2::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,2
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(2)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5002)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5002)
+				TcSendPos(2001)
+			}
+		}
+	return
+
+	3::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,3
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(3)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5003)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5003)
+				TcSendPos(2001)
+			}
+		}
+	return
+
+	4::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,4
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(4)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5004)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5004)
+				TcSendPos(2001)
+			}
+		}
+	return
+
+	5::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,5
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(5)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5005)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5005)
+				TcSendPos(2001)
+			}
+		}
+	return
+
+	6::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,6
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(6)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5006)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5006)
+				TcSendPos(2001)
+			}
+		}
+	return
+
+	7::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,7
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(7)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5007)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5007)
+				TcSendPos(2001)
+			}
+		}
+	return
+
+	8::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,8
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(8)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5008)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5008)
+				TcSendPos(2001)
+			}
+		}
+	return
+
+	9::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,9
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(9)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5009)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5009)
+				TcSendPos(2001)
+			}
+		}
+	return
+
+	0::
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+			Sendinput,0
+		else {
+			p := ClickAndLongClick()
+			If (p = "0") {
+				;单击
+				fun_TCselectFileByNum(0)
+			} Else If (p = "00") {
+				;双击
+				TcSendPos(5001)
+				TcSendPos(3006)
+			} Else If (p = "1") {
+				;长按
+				TcSendPos(5001)
+				TcSendPos(3006)
+				TcSendPos(2001)
+			}
+		}
+	return
+
 
 
 	;避免中文输入法的问题
@@ -2605,24 +3173,47 @@ return
 		;send,{Enter}
 	;return
 
-	;中键点击，在新建标签中打开
+	;cm_OpenDirInNewTabOther中键点击，在对面新标签中打开
 	MButton::
+		Send,{Click}
+		Sleep 50
+		TcSendPos(3004)
+	return
+
+	;cm_OpenDirInNewTab中键点击，在新标签中打开
+	^MButton::
 		Send,{Click}
 		Sleep 50
 		TcSendPos(3003)
 	return
 
-	;双击右键，发送退格，返回上一级目录
-	~RButton::
-		KeyWait,RButton
-		KeyWait,RButton, d T0.1
-		If ! Errorlevel
-		{
-		  send {Backspace} 
-		}
-	Return
+	;左手alt+e作为F4
+	!e::
+		BlockInput On
+		Sendinput,{Esc}
+		Sleep,100
+		Sendinput,{Alt up}
+		Sendinput,{F4}
+		BlockInput Off
+	return
 
-	`:: GoSub,Sub_azHistory
+	;双击右键，发送退格，返回上一级目录
+	;~RButton::
+		;KeyWait,RButton
+		;KeyWait,RButton, d T0.1
+		;If ! Errorlevel
+		;{
+		  ;send {Backspace} 
+		;}
+	;Return
+
+
+	;花号的作用
+	;`:: GoSub,Sub_azHistory
+	;`:: Send,{Enter}
+	`:: Send,{Appskey}
+
+	!j:: GoSub,Sub_azHistory
 
 	;智能对话框跳转
 	!w::
@@ -2698,7 +3289,7 @@ return
 					ControlSetText, Edit1, %selFiles%, A
 				}
 			}
-			reload
+			Gosub,SelfReload
 		}
 		else{
 			EzTip("系统当前没有打开或保存对话框",2)
@@ -2707,9 +3298,46 @@ return
 
 #IfWinActive
 
+#If WinActive("ahk_class TTOTAL_CMD") and MouseUnder("(TMy|LCL)ListBox[123]")
+	;长按左键，等于F4
+	~LButton::
+		GV_LongClickAction := "Send,{Click}{F4}"
+		GoSub,Sub_ButtonLongPress
+	return
+#If
+
+MouseUnder(Controls) {
+  MouseGetPos,,,, Control
+  If RegExMatch(Control, Controls)
+    Return, True
+}
+
+
 TcSendPos(Number)
 {
     PostMessage 1075, %Number%, 0, , AHK_CLASS TTOTAL_CMD
+}
+
+;#IfWinActive ahk_class TTOTAL_CMD
+;#0::TcSendUserCommand("em_To7zip") 
+;return
+TcSendUserCommand(strCommand) ; string 
+{ 
+	VarSetCapacity(CopyDataStruct, 3*A_PtrSize, 0)  ; Set up the structure's memory area. 
+	dwData := Asc("E") + 256 * Asc("M") 
+	NumPut(dwData, CopyDataStruct, 0) 
+	cbData := StrPutVar(strCommand, strCommand, "cp0") 
+	NumPut(cbData, CopyDataStruct, A_PtrSize)  ; OS requires that this be done. 
+	NumPut(&strCommand, CopyDataStruct, 2*A_PtrSize)  ; Set lpData to point to the string itself. 
+	SendMessage, 0x4a, 0, &CopyDataStruct,, ahk_class TTOTAL_CMD ; 0x4a is WM_COPYDATA. Must use Send not Post. 
+} 
+ 
+StrPutVar(string, ByRef var, encoding) 
+{ 
+	; Ensure capacity. 
+	VarSetCapacity( var, StrPut(string, encoding) * ((encoding="utf-16"||encoding="cp1200") ? 2 : 1) ) 
+	; Copy or convert the string. 
+	return StrPut(string, &var, encoding) 
 }
 
 #IfWinActive,批量重命名 ahk_class TMultiRename
@@ -2784,6 +3412,43 @@ F1::Send,{F10}e
 	CapsLock & p:: send,^{F6}
 }
 
+;Everything中 {{{2
+;audio:	搜索音频文件.
+;zip:	搜索压缩文件.
+;doc:	搜索文档文件.
+;exe:	搜索可执行文件.
+;pic:	搜索图片文件.
+;video:	搜索视频文件.
+;folder:仅匹配文件夹.
+;8-tf-文本文件
+;9-ct-内容搜索
+;cf-重复文件
+;mt-音频-作者专辑标题
+#IfWinActive ahk_class EVERYTHING
+	!a::EverythingChooseType("audio")
+	!z::EverythingChooseType("zip")
+	!w::EverythingChooseType("doc")
+	!e::EverythingChooseType("exe")
+	!t::EverythingChooseType("pic")
+	!u::EverythingChooseType("video")
+	!m::EverythingChooseType("folder")
+
+	~LButton::
+		GV_LongClickAction := "Send,{Click}{F4}"
+		GV_MouseButton := 1
+		GoSub,Sub_ButtonLongPress
+	return
+
+#IfWinActive
+
+EverythingChooseType(ft){
+	ControlGetText, searching, Edit1, A
+	searching := ft . ":" . searching
+	ControlSetText, Edit1, %searching%, A
+	sleep,800
+	send,{End}
+}
+
 ;MPV播放器中 {{{2
 #IfWinActive ahk_exe MPV.exe
 {
@@ -2803,18 +3468,40 @@ F1::Send,{F10}e
 
 }
 
+;Qsel启动器 {{{2
+#If WinActive("Qsel  ahk_class WindowClass_0")
+{
+	XButton1::sendinput,{Tab}
+	XButton2::sendinput,{Backspace}
+	WheelDown::sendinput,{Tab}
+	WheelUp::sendinput,{Backspace}
+	space & WheelDown::sendinput,{Tab}
+	space & WheelUp::sendinput,{Backspace}
+	Space::space
+
+	RButton::
+		GV_MouseTimer := 400
+		GV_KeyClickAction1 := "Send,{RButton}"
+		GV_KeyClickAction2 := "Send,{Escape}"
+		GoSub,Sub_MouseClick123
+	return
+}
 
 
 ;IrfanView {{{2
 #If WinActive("ahk_class IrfanView")
 {
+	;IrfanView自身支持ctrl+滚轮，但alt更好按，也不用多想到底哪一个按键
 	!WheelDown::send,{-}
 	!WheelUp::send,{+}
 	.:: send,{+}
 	,:: send,{-}
 
+
 	`;::send,{Esc}
 
+	y:: send,{PgDn}
+	;如果是动画，先按g暂停动画图片了后再按jk
 	j:: send,{PgDn}
 	k:: send,{PgUp}
 
@@ -2826,6 +3513,9 @@ F1::Send,{F10}e
 
 	c:: send,^c
 	!r:: send,{F2}
+	1:: send,!ofn{Enter}
+	4:: send,!ofd{Enter}
+	5:: send,!of{Up}{Enter}
 }
 
 #If WinActive("ahk_class IrfanViewThumbnails")
@@ -2841,13 +3531,6 @@ F1::Send,{F10}e
 ;快速目录切换 {{{2
 ;收藏的目录，
 ;最近使用的目录
-;#IfWinActive 另存为 ahk_class #32770
-;#If WinActive("另存为 ahk_class #32770") or WinActive("打开 ahk_class #32770")
-;!f:: SendPath2Diag("另存为","Edit1","d:\My Documents\桌面")
-;send,!n%2Path%{Enter}{Del}
-;send,% text
-;ControlSetText, Edit1, "d:\My Documents\桌面",A
-;ControlSetText, Edit1, cd %ThisMenuItem%, ahk_class TTOTAL_CMD
 #IfWinActive, ahk_group GroupDiagOpenAndSave
 	;从对话框中切换到tc，在tc中再选文件，然后alt+w再回来
 	!w:: GoSub,Sub_SendCurDiagPath2Tc
@@ -2872,7 +3555,6 @@ Sub_SendCurDiagPath2Tc:
 	;sleep 900
 	;ControlSend, Edit1, {enter}, ahk_class TTOTAL_CMD
 return
-
 
 
 ;将tc中路径发送到对话框
@@ -2942,8 +3624,7 @@ Sub_azHistory:
 
     Global TC_azHistorySelect
 	;MaxItem := 36
-	;MaxItem := 10
-	MaxItem := 30
+	MaxItem := 26
 
 	WinGet,exeName,ProcessName,A
 	WinGet,exeFullPath,ProcessPath,A
@@ -3000,18 +3681,10 @@ Sub_azHistory:
         {
 			Value := RegExReplace(arrHistory[A_Index],"^\d\d?=")
 			IconNum := A_Index
-			if(A_Index <= 10)
-				Char := "[&" Chr(A_Index+47) "]"
-			else if(A_Index <= 36)
-				Char := "[&" Chr(A_Index+54) "]"
-			Else
-				Char = ""
-				;Break
+			Char := "[&" Chr(A_Index+64) "]"
             TC_azHistorySelect[A_Index] := Value
             Value := RegExReplace(Value, "::(\{[0-9a-zA-Z\-]*\})?\|")
             Menu, TC_azHistory, Add, %Char%    %Value%, azHistory_Select
-            ;Menu, TC_azHistory, Add, %Value%%A_Tab%%Char%, azHistory_Select
-            ;Menu, TC_azHistory, Icon, %Value%%A_Tab%%Char%, %IconFile%, %IconNum%
         }
         ControlGetFocus,TLB,ahk_class TTOTAL_CMD
         ControlGetPos,xn,yn,wn,,%TLB%,ahk_class TTOTAL_CMD
@@ -3081,21 +3754,92 @@ return
 
 CreatTrayMenu:
 	Menu,Tray,NoStandard
-	Menu,Tray,add,Spy(&D),Menu_Debug
-	Menu,Tray,add,重启(&R),Menu_Reload
+	Menu,Tray,add,Edit编辑脚本,Menu_Edit
+	Menu,Tray,add,Spy,Menu_Debug
+	Menu,Tray,add,AHK帮助文档,Menu_Document
+	Menu,Tray,add,Open自身监视,Menu_Open
+	Menu,Tray,add
+	Menu,Tray,add,开启或关闭随系统自动启动,Menu_AutoStart
+	Menu,Tray,add,添加或去除绿软SoftDir变量,Menu_SoftDir
+	Menu,Tray,add
+	Menu,Tray,add,拾遗补缺的绿化,Menu_GreenPath
+	Menu,Tray,add
+	Menu,Tray,add,重启脚本(&R),Menu_Reload
 	Menu,Tray,add
 	Menu,Tray,add,暂停热键(&S),Menu_Suspend
 	Menu,Tray,add,暂停脚本(&A),Menu_Pause
 	Menu,Tray,add,退出(&X),Menu_Exit
 return
 
+
+Menu_Open:
+	listlines
+return
+
+Menu_Edit:
+	;Edit
+	run,%A_ScriptDir%\Tools\notepad\Notepad.exe %A_ScriptFullPath%
+return
+
 Menu_Debug:
 	run,AU3_Spy.exe
 return
 
-Menu_Reload:
-	Reload
+Menu_Document:
+	;run,hh.exe %A_ScriptDir%\AutoHotkey.chm
+	run,https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm
 return
+
+Menu_Reload:
+	Gosub,SelfReload
+return
+
+Menu_AutoStart:
+	if A_Is64bitOS 
+		SetRegView 64
+	RegRead, OutputVar, HKEY_LOCAL_MACHINE, Software\Microsoft\Windows\CurrentVersion\Run, CapsEz
+	if OutputVar
+	{
+		RegDelete, HKEY_LOCAL_MACHINE, Software\Microsoft\Windows\CurrentVersion\Run, CapsEz
+		eztip("已关闭CapsEz随系统自动启动",10)
+	}
+	else
+	{
+		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE, Software\Microsoft\Windows\CurrentVersion\Run, CapsEz, "%A_AhkPath%"
+		eztip("已设置CapsEz随系统自动启动",10)
+	}
+return
+
+Menu_SoftDir:
+	if A_Is64bitOS 
+		SetRegView 64
+	RegRead, OutputVar, HKEY_LOCAL_MACHINE, SYSTEM\CurrentControlSet\Control\Session Manager\Environment, SoftDir
+	if OutputVar
+	{
+		RegDelete, HKEY_LOCAL_MACHINE, SYSTEM\CurrentControlSet\Control\Session Manager\Environment, SoftDir
+		eztip("已去掉SoftDir环境变量",10)
+	}
+	else
+	{
+		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE, SYSTEM\CurrentControlSet\Control\Session Manager\Environment, SoftDir, %SOFTDIR%
+		eztip("已添加SoftDir环境变量",10)
+	}
+return
+
+Menu_GreenPath:
+	;1、newfile中的模板，Tools\NewFiles\NewFiles.ini
+	p := A_scriptDir . "\Tools\NewFiles\Templates"
+	IniWrite, %p%,  %A_scriptDir%\Tools\NewFiles\NewFiles.ini, FileList,TemplatePath
+	;2、everything的Everything.ini
+	p := "$exec(""" . A_scriptDir . "\" . COMMANDER_NAME . """ /A /T /O /S /L=""%1"")"
+	IniWrite, %p%,  %A_scriptDir%\Everything.ini, Everything,open_folder_command2
+	IniWrite, %p%,  %A_scriptDir%\Everything.ini, Everything,open_path_command2
+	p := "$exec(""" . A_scriptDir . "\Tools\F4Menu\F4Menu.exe"" ""%1"")"
+	IniWrite, %p%,  %A_scriptDir%\Everything.ini, Everything,explore_command2
+	IniWrite, %p%,  %A_scriptDir%\Everything.ini, Everything,explore_path_command2
+
+return
+
 Menu_Suspend:
 	Menu,tray,ToggleCheck,暂停热键(&S)
 	Suspend
