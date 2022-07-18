@@ -152,8 +152,8 @@ gv_url_tdx_f10 := "http://data.eastmoney.com/notices/stock/"
 gv_url_html := ".html"
 
 
-COMMANDER_PATH := % A_WorkingDir
-if A_Is64bitOS AND FileExist(A_WorkingDir . "\" . "TOTALCMD64.EXE") {
+COMMANDER_PATH := % A_ScriptDir
+if A_Is64bitOS AND FileExist(A_ScriptDir . "\" . "TOTALCMD64.EXE") {
 		COMMANDER_NAME := "TOTALCMD64.EXE"
 } else{
 		COMMANDER_NAME := "TOTALCMD.EXE"
@@ -2262,12 +2262,16 @@ return
 	MyWinWaitActive("Qsel  ahk_class WindowClass_0")
 return
 
+#f:: 
+	run %A_ScriptDir%\Everything.exe
+	sleep 500
+	MyWinWaitActive("ahk_class EVERYTHING")
+return
 
 #h::run, cmd
 ;管理员权限cmd
 ^#h::run, *RunAs cmd
 #c::run %A_ScriptDir%\Tools\notepad\Notepad.exe /c
-#f:: run %A_ScriptDir%\Everything.exe
 
 #F5::run winword.exe
 #F6::run excel.exe
