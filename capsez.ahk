@@ -107,6 +107,10 @@ Gosub,CreatTrayMenu
 ;GV_EscKeyAs := "CapsLock"
 GV_EscKeyAs := "Backspace"
 
+;启动器选择，可选为popsel和qsel
+;GV_PopSel_QSel := "popsel"
+GV_PopSel_QSel := "qsel"
+
 ;是否启用光标下滚轮
 GV_ToggleWheelOnCursor := 0
 
@@ -119,8 +123,13 @@ GV_ToggleSpaceKeys := 0
 ;在浏览器中启用空格系列快捷键
 GV_GroupBrowserToggleSpaceKeys := 1
 
-;在浏览器中切换滚轮模式，开关默认为左边alt加空格
-GV_GroupBrowserToggleWheelMode := 0
+;在浏览器中切换滚轮模式
+;视频中滚轮为左右快进，主要是用来看视频网站，开关默认为左边alt加空格或者双击侧边键1
+GV_GroupBrowserToggleWheelModeLeftRight := 0
+;页面中滚轮为翻页，几行和一页间切换
+GV_GroupBrowserToggleWheelModeUpDown := 0
+;在浏览器中切换侧边键作为中键模式
+GV_GroupBrowserToggleMButtonMode := 0
 
 ;在Totalcmd中使用数字键，单击快速打开，双击跳转
 GV_TotalcmdToggleJumpByNumber := 1
@@ -152,13 +161,13 @@ gv_url_tdx_f10 := "http://data.eastmoney.com/notices/stock/"
 gv_url_html := ".html"
 
 
-COMMANDER_PATH := % A_ScriptDir
+global COMMANDER_PATH := % A_ScriptDir
 if A_Is64bitOS AND FileExist(A_ScriptDir . "\" . "TOTALCMD64.EXE") {
 		COMMANDER_NAME := "TOTALCMD64.EXE"
 } else{
 		COMMANDER_NAME := "TOTALCMD.EXE"
 }
-COMMANDER_EXE := COMMANDER_PATH . "\" . COMMANDER_NAME
+global COMMANDER_EXE := COMMANDER_PATH . "\" . COMMANDER_NAME
 EnvSet,COMMANDER_PATH, %COMMANDER_PATH%
 EnvSet,COMMANDER_EXE, %COMMANDER_EXE%
 
@@ -337,7 +346,13 @@ Sub_volUp:
 Return
 
 Sub_volMute:
+	SetTimer,SliderOff,2000
 	SoundSet, +1, , mute
+	SoundGet, master_mute, , mute
+	if master_mute = Off  
+		Gosub,DisplaySlider
+	 else if master_mute = On
+		Progress,0,0, ,音量大小
 return
 
 SliderOff:
@@ -412,7 +427,7 @@ AutoReloadInit:
 return
 
 SelfReload:
-	if GV_ToggleReload
+	if (GV_ToggleReload && !GV_GroupBrowserToggleMButtonMode && !GV_GroupBrowserToggleWheelModeLeftRight && !GV_GroupBrowserToggleWheelModeUpDown)
 	{
 		;Send,{space up}
 		Send,{capslock up}
@@ -438,6 +453,32 @@ SelfReload:
 
 		reload
 	}
+return
+
+ForceSelfReload:
+	;Send,{space up}
+	Send,{capslock up}
+
+	Send,{LWin Up}
+	Send,{RWin Up}
+
+	Send,{Shift Up}
+	Send,{LShift Up}
+	Send,{RShift Up}
+
+	Send,{Alt Up}
+	Send,{LAlt Up}
+	Send,{RAlt Up}
+
+	Send,{Control Up}
+	Send,{LControl Up}  
+	Send,{RControl Up}
+
+	Send,{Volume_Down Up}
+	Send,{Volume_Up Up}
+
+	sleep 100 
+	reload
 return
 
 ;************** caps+鼠标滚轮调整窗口透明度^    ************** {{{1
@@ -1224,25 +1265,24 @@ return
 	;send #e
 ;return
 ;左右手结合上下左右
-CapsLock & j::SendInput,{Down}
-CapsLock & k::SendInput,{Up}
-CapsLock & h::SendInput,{Left}
-CapsLock & l::SendInput,{Right}
+CapsLock & j::SendInput,{Blind}{Down}
+CapsLock & k::SendInput,{Blind}{Up}
+CapsLock & h::SendInput,{Blind}{Left}
+CapsLock & l::SendInput,{Blind}{Right}
 
+CapsLock & w::SendInput,{Blind}{Up}
+CapsLock & s::SendInput,{Blind}{Down}
+CapsLock & a::SendInput,{Blind}{Left}
+CapsLock & d::SendInput,{Blind}{Right}
 
-CapsLock & w::SendInput,{Up}
-CapsLock & s::SendInput,{Down}
-CapsLock & a::SendInput,{Left}
-CapsLock & d::SendInput,{Right}
+CapsLock & q::SendInput,{Blind}{PgUp}
+CapsLock & e::SendInput,{Blind}{PgDn}
 
-CapsLock & q::SendInput,{PgUp}
-CapsLock & e::SendInput,{PgDn}
+CapsLock & r:: SendInput,{Blind}{Delete}
+CapsLock & f:: SendInput,{Blind}{Enter}
 
-CapsLock & r:: SendInput,{Delete}
-CapsLock & f:: SendInput,{Enter}
-
-CapsLock & x:: SendInput,{Del}
-CapsLock & z:: SendInput,{Backspace}
+CapsLock & x:: SendInput,{Blind}{Del}
+CapsLock & z:: SendInput,{Blind}{Backspace}
 
 ;右键菜单
 ;CapsLock & y:: send,{AppsKey}
@@ -1275,26 +1315,26 @@ CapsLock & '::Send,{Click}
 ;CapsLock & m:: SendInput,{Blind}{PgUp}
 
 CapsLock & u::
-	GV_KeyClickAction1 := "SendInput,{End}"
-	GV_KeyClickAction2 := "SendInput,^{End}"
+	GV_KeyClickAction1 := "SendInput,{Blind}{End}"
+	GV_KeyClickAction2 := "SendInput,{Blind}^{End}"
 	GoSub,Sub_KeyClick123
 return
 
 CapsLock & i::
-	GV_KeyClickAction1 := "SendInput,{Home}"
-	GV_KeyClickAction2 := "SendInput,^{Home}"
+	GV_KeyClickAction1 := "SendInput,{Blind}{Home}"
+	GV_KeyClickAction2 := "SendInput,{Blind}^{Home}"
 	GoSub,Sub_KeyClick123
 return
 
 CapsLock & n::
-	GV_KeyClickAction1 := "SendInput,{PgDn}"
-	GV_KeyClickAction2 := "SendInput,^{PgDn}"
+	GV_KeyClickAction1 := "SendInput,{Blind}{PgDn}"
+	GV_KeyClickAction2 := "SendInput,{Blind}^{PgDn}"
 	GoSub,Sub_KeyClick123
 return
 
 CapsLock & m::
-	GV_KeyClickAction1 := "SendInput,{PgUp}"
-	GV_KeyClickAction2 := "SendInput,^{PgUp}"
+	GV_KeyClickAction1 := "SendInput,{Blind}{PgUp}"
+	GV_KeyClickAction2 := "SendInput,{Blind}^{PgUp}"
 	GoSub,Sub_KeyClick123
 return
 
@@ -1331,10 +1371,13 @@ EzOtherMenuShow:
 	Menu, MyMenu, UseErrorLevel
 	Menu, MyMenu, DeleteAll
 	Menu, MyMenu, Add, 搜索, Sub_SearchSelectTxt
+	Menu, MyMenu, Add, Everything搜索, Sub_EverythingSelectTxt
 	Menu, MyMenu, Add  ; 添加分隔线.
 	Menu, MyMenu, Add, 播放器打开, Sub_OpenUrlByPlayer
 	Menu, MyMenu, Add  ; 添加分隔线.
 	Menu, MyMenu, Add, 纯文本粘贴, PastePureText
+	Menu, MyMenu, Add, Z转换后粘贴, JoinAndPaste
+	Menu, MyMenu, Add  ; 添加分隔线.
 	Menu, MyMenu, Add, 添加Quote, PasteQuote
 	Menu, MyMenu, Add, 添加Code, PasteCode
 	Menu, MyMenu, Add, 添加磁头Magnet, PasteMagnet
@@ -1403,6 +1446,20 @@ PastePureText:
 	}
 return
 
+JoinAndPaste:
+	clip:=clipboard 
+	;例子1
+	;对tc中文件复制文件名之后处理，添加双引号并且把多行合并成一行并用竖杠连接
+	;clip := RegExReplace(clip, "(.+)(`r`n)?", """$1""`|")
+	;例子2
+	;对everything的搜索结果进行处理，去掉双引号并且把多行合并成一行并用tab分隔
+	clip := RegExReplace(clip, "("".+"")(`r`n)?", "$1`t")
+	StringTrimRight, clip, clip, 1
+	clipboard = %clip%
+	send,{Blind}^v
+return
+
+
 PasteQuote:
 	send,^c<quote>{Blind}^v</quote>
 return
@@ -1430,6 +1487,14 @@ Sub_SearchSelectTxt:
 	else{
 		run,http://www.baidu.com/s?ie=utf-8&wd=%clip%
 	}
+return
+
+Sub_EverythingSelectTxt:
+	send,^c
+	sleep,500
+	clip :=
+	clip=%clipboard%
+	run,%A_ScriptDir%\Everything.exe %clip%
 return
 
 Sub_OpenUrlByPlayer:
@@ -1647,7 +1712,7 @@ return
 
 ` & y::
 	GV_KeyClickAction1 := "SendInput,{Blind}{Home}+{End}"
-	GV_KeyClickAction2 := "SendInput,^{Home}"
+	GV_KeyClickAction2 := "SendInput,{Blind}^{Home}^+{End}"
 	GoSub,Sub_KeyClick123
 return
 
@@ -1674,8 +1739,8 @@ return
 ;************** Alttab相关 ************** {{{2
 ;按住左键再进行滚轮，在AltaTab菜单中，可以点击右键或者按空格进行确认选择。
 ;多用在把文件拖到别的程序中打开，或者类似于qq微信传文件。也可以将浏览器中的图片直接拖到文件管理器中保存
-LButton & WheelUp::ShiftAltTab
-LButton & WheelDown::AltTab
+;LButton & WheelUp::ShiftAltTab
+;LButton & WheelDown::AltTab
 ;就没必要还用这个了
 ;LWin & WheelUp::ShiftAltTab
 ;LWin & WheelDown::AltTab
@@ -1699,6 +1764,11 @@ LButton & WheelDown::AltTab
 
 	;左手
 	!q::SendInput,{Blind}{Left}
+	!s::SendInput,{Blind}{Down}
+	!w::SendInput,{Blind}{Up}
+	!a::SendInput,{Blind}{Left}
+	!d::SendInput,{Blind}{Right}
+
 	;右手
 	!j::SendInput,{Blind}{Down}
 	!k::SendInput,{Blind}{Up}
@@ -1718,6 +1788,11 @@ LButton & WheelDown::AltTab
 
 	;左手
 	!q::SendInput,{Blind}{Left}
+	!s::SendInput,{Blind}{Down}
+	!w::SendInput,{Blind}{Up}
+	!a::SendInput,{Blind}{Left}
+	!d::SendInput,{Blind}{Right}
+
 	;右手
 	!j::SendInput,{Blind}{Down}
 	!k::SendInput,{Blind}{Up}
@@ -1858,22 +1933,18 @@ fun_NircmdScreenShot(wd)
 	ScreenShotPath := "D:\"
 	if(wd = 1) {
 		SSFileName = % ScreenShotPath . "SSAW-" . fun_GetFormatTime( "yyyy-MM-dd HH-mm-ss" ) . ".png"
-		run nircmd savescreenshotwin "%SSFileName%"
-		if(GV_ScreenShot2Clip = 1){
-			sleep,1000
-			run,nircmd clipboard copyimage "%SSFileName%"
-		}
 	}
 	else {
 		SSFileName = % ScreenShotPath . "SSWD-" .  fun_GetFormatTime( "yyyy-MM-dd HH-mm-ss" ) . ".png"
-		run nircmd savescreenshot "%SSFileName%"
-		if(GV_ScreenShot2Clip = 1){
-			sleep,1000
-			run,nircmd clipboard copyimage "%SSFileName%"
-		}
+	}
+
+	run nircmd savescreenshotwin "%SSFileName%"
+	if(GV_ScreenShot2Clip = 1){
+		sleep,1000
+		run,nircmd clipboard copyimage "%SSFileName%"
 	}
 	sleep,1000
-	EzTip(SSFileName,1)
+	EzTip(SSFileName,2)
 }
 
 ;************** 窗口相关 ************** {{{2
@@ -1943,8 +2014,8 @@ return
 	pause toggle
 return
 
-^!#r:: 
-	Gosub,SelfReload
+^!#r::
+	Gosub,ForceSelfReload
 return
 
 ;解决Win10中任务栏无法切换的臭毛病
@@ -1981,10 +2052,8 @@ return
 		GoSub,Sub_ButtonLongPress
 	return
 
-
 	XButton1 & RButton::SendInput,^c
 	XButton2 & RButton::SendInput,^c
-
 
 	XButton2 & XButton1::GoSub,Sub_Idm2Mpv
 	XButton1 & XButton2::GoSub,Sub_Idm2Mpv
@@ -1994,27 +2063,67 @@ return
 	XButton1 & WheelDown::SendInput,{Blind}{Right}
 	XButton2 & WheelDown::SendInput,{Blind}{Right}
 
-	XButton2::Send,{PgUp}
-	XButton1::Send,{PgDn}
+	Tab & WheelUp:: SendInput,{Blind}{Left}
+	Tab & WheelDown::SendInput,{Blind}{Right}
+
+	XButton2::
+		p := ClickAndLongClick()
+		If (p = "0") {
+			;单击
+			if GV_GroupBrowserToggleWheelModeLeftRight 
+				SendInput,{MButton}
+			else
+				Send,{PgUp}
+		} Else If (p = "00") {
+			;双击
+			GV_GroupBrowserToggleWheelModeLeftRight := !GV_GroupBrowserToggleWheelModeLeftRight
+			eztip("切换鼠标滚轮模式" . GV_GroupBrowserToggleWheelModeLeftRight,2)
+		}
+	return
+
+	XButton1::
+		p := ClickAndLongClick()
+		If (p = "0") {
+			;单击
+			if GV_GroupBrowserToggleMButtonMode 
+				SendInput,{MButton}
+			else
+				Send,{PgDn}
+		} Else If (p = "00") {
+			;双击
+			GV_GroupBrowserToggleMButtonMode := !GV_GroupBrowserToggleMButtonMode
+			eztip("切换侧边键作为中键" . GV_GroupBrowserToggleMButtonMode,2)
+		} Else If (p = "01") {
+			;双击再按住
+			GV_GroupBrowserToggleWheelModeUpDown := !GV_GroupBrowserToggleWheelModeUpDown
+			eztip("切换滚轮为翻页" . GV_GroupBrowserToggleWheelModeUpDown,2)
+		}
+	return
+
 
 	;浏览器中切换滚轮模式，主要是方便看视频，西瓜和B站
-	!`:: 
 	<!Space::
-		GV_GroupBrowserToggleWheelMode := !GV_GroupBrowserToggleWheelMode
-		eztip("鼠标滚轮模式切换",1)
+		GV_GroupBrowserToggleWheelModeLeftRight := !GV_GroupBrowserToggleWheelModeLeftRight
+		eztip("鼠标滚轮模式切换" . GV_GroupBrowserToggleWheelModeLeftRight,2)
 	return
 
 	WheelUp::
-		if GV_GroupBrowserToggleWheelMode 
+		if GV_GroupBrowserToggleWheelModeLeftRight {
 			SendInput,{Blind}{Left}
-		else
+		} else if GV_GroupBrowserToggleWheelModeUpDown {
+			SendInput,{Blind}{PgUp}
+		} else {
 			SendInput,{WheelUp}
+		}
 	return
 	WheelDown::
-		if GV_GroupBrowserToggleWheelMode 
+		if GV_GroupBrowserToggleWheelModeLeftRight {
 			SendInput,{Blind}{Right}
-		else
+		} else if GV_GroupBrowserToggleWheelModeUpDown {
+			SendInput,{Blind}{PgDn}
+		} else {
 			SendInput,{WheelDown}
+		}
 	return
 
 #IfWinActive
@@ -2028,8 +2137,8 @@ return
 	Space & h:: SendInput,{Blind}{Left}
 	Space & l:: SendInput,{Blind}{Right}
 
-	Space & WheelUp::SendInput,{Blind}{Left}
-	Space & WheelDown::SendInput,{Blind}{Right}
+	Space & WheelUp::SendInput,{Blind}{Left}{Space up}
+	Space & WheelDown::SendInput,{Blind}{Right}{Space up}
 
 	Space & w:: SendInput,{Blind}^{Right}
 	Space & b:: SendInput,{Blind}^{Left}
@@ -2116,7 +2225,6 @@ return
 	return
 
 	Space & f::GoSub,Sub_Idm2Mpv
-
 
 	;$Space::send,{Blind}{space}
 
@@ -2237,6 +2345,32 @@ return
 
 ;************** 例子,建议从这里修改 ************** {{{1
 ;建议的绿色便携的小菜单程序PopSel
+#z::
+	if(GV_PopSel_QSel="popsel") {
+		run %A_ScriptDir%\Tools\popsel\PopSel.exe /pc /T500
+		sleep 500
+		MyWinWaitActive("PopSel - ahk_class WindowClass_0")
+	}
+	else if(GV_PopSel_QSel="qsel") {
+		run,"%A_ScriptDir%\Tools\qsel\Qsel.exe", %A_ScriptDir%\Tools\qsel
+		sleep 500
+		MyWinWaitActive("Qsel  ahk_class WindowClass_0")
+	}
+return
+
+#RButton::
+	if(GV_PopSel_QSel="popsel") {
+		run %A_ScriptDir%\Tools\popsel\PopSel.exe /i /T500
+		sleep 500
+		MyWinWaitActive("PopSel - ahk_class WindowClass_0")
+	}
+	else if(GV_PopSel_QSel="qsel") {
+		run,"%A_ScriptDir%\Tools\qsel\Qsel.exe", %A_ScriptDir%\Tools\qsel
+		sleep 500
+		MyWinWaitActive("Qsel  ahk_class WindowClass_0")
+	}
+return
+
 ;#z::
 	;run %A_ScriptDir%\Tools\popsel\PopSel.exe /pc /T500
 	;sleep 500
@@ -2250,17 +2384,17 @@ return
 ;return
 
 ;建议的绿色便携的小菜单程序Qsel，这两个二选一即可
-#z::
-	run,"%A_ScriptDir%\Tools\qsel\Qsel.exe", %A_ScriptDir%\Tools\qsel
-	sleep 500
-	MyWinWaitActive("Qsel  ahk_class WindowClass_0")
-return
+;#z::
+	;run,"%A_ScriptDir%\Tools\qsel\Qsel.exe", %A_ScriptDir%\Tools\qsel
+	;sleep 500
+	;MyWinWaitActive("Qsel  ahk_class WindowClass_0")
+;return
 
-#RButton::
-	run,"%A_ScriptDir%\Tools\qsel\Qsel.exe", %A_ScriptDir%\Tools\qsel
-	sleep 500
-	MyWinWaitActive("Qsel  ahk_class WindowClass_0")
-return
+;#RButton::
+	;run,"%A_ScriptDir%\Tools\qsel\Qsel.exe", %A_ScriptDir%\Tools\qsel
+	;sleep 500
+	;MyWinWaitActive("Qsel  ahk_class WindowClass_0")
+;return
 
 #f:: 
 	run %A_ScriptDir%\Everything.exe
@@ -2549,17 +2683,17 @@ Explorer_Get(hwnd="",selection=false)
 
 	;将tc中默认D:\My Documents\WeChat Files\corals\FileStorage\MsgAttach改成自己的MsgAttac所在目录全路径
 	!f::
-		;wx_path = % "D:\My Documents\WeChat Files\corals\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
-		;run,"%COMMANDER_EXE%" /T /O /S /L="%wx_path%"
-		;sleep 500
-		;MyWinWaitActive("ahk_class TTOTAL_CMD")
-
+		wx_path = % "D:\My Documents\WeChat Files\corals\FileStorage\File\" . fun_GetFormatTime( "yyyy-MM" )
+		run,"%COMMANDER_EXE%" /T /O /S /L="%wx_path%"
+		sleep 500
 		MyWinWaitActive("ahk_class TTOTAL_CMD")
-		TcSendUserCommand("em_loadSearchWechatFile")
-		Sleep,500
-		send,!s
-		Sleep,2000
-		send,!l
+
+		;MyWinWaitActive("ahk_class TTOTAL_CMD")
+		;TcSendUserCommand("em_loadSearchWechatFile")
+		;Sleep,500
+		;send,!s
+		;Sleep,2000
+		;send,!l
 	return
 
 	;点右键选删除
@@ -2758,22 +2892,17 @@ TC_Focus_Edit(){
 
 
 fun_TCselectFileByNum(n){
-	if TC_Focus_Edit() {
-		Sendinput,%n%
+	;如果是0就获取总共几个
+	if(n=0) {
+		;1000 to get active panel: 1=left, 2=right (32/64)
+		tcLeftRight := fun_TcGet(1000)
+		sMsg := % 1000 + tcLeftRight
+		;1001/1002 to get number of items in left/right list (32/64)
+		n := fun_TcGet(sMsg) - 1
 	}
-	else {
-		;如果是0就获取总共几个
-		if(n=0) {
-			;1000 to get active panel: 1=left, 2=right (32/64)
-			tcLeftRight := fun_TcGet(1000)
-			sMsg := % 1000 + tcLeftRight
-			;1001/1002 to get number of items in left/right list (32/64)
-			n := fun_TcGet(sMsg) - 1
-		}
-		ControlGetFocus, Ctrl, AHK_CLASS TTOTAL_CMD
-		Postmessage, 0x19E, %n%, 1, %Ctrl%, AHK_CLASS TTOTAL_CMD
-		Sendinput,{Enter}
-	}
+	ControlGetFocus, Ctrl, AHK_CLASS TTOTAL_CMD
+	Postmessage, 0x19E, %n%, 1, %Ctrl%, AHK_CLASS TTOTAL_CMD
+	Sendinput,{Enter}
 }
 
 ;判断当前tc中是否正在显示着收藏夹菜单
@@ -2942,7 +3071,7 @@ StrRepeat(str, count){
 	return
 
 	1::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,1
 		else {
 			p := ClickAndLongClick()
@@ -2961,7 +3090,7 @@ StrRepeat(str, count){
 	return
 
 	2::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,2
 		else {
 			p := ClickAndLongClick()
@@ -2980,7 +3109,7 @@ StrRepeat(str, count){
 	return
 
 	3::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,3
 		else {
 			p := ClickAndLongClick()
@@ -2999,7 +3128,7 @@ StrRepeat(str, count){
 	return
 
 	4::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,4
 		else {
 			p := ClickAndLongClick()
@@ -3018,7 +3147,7 @@ StrRepeat(str, count){
 	return
 
 	5::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,5
 		else {
 			p := ClickAndLongClick()
@@ -3037,7 +3166,7 @@ StrRepeat(str, count){
 	return
 
 	6::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,6
 		else {
 			p := ClickAndLongClick()
@@ -3056,7 +3185,7 @@ StrRepeat(str, count){
 	return
 
 	7::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,7
 		else {
 			p := ClickAndLongClick()
@@ -3075,7 +3204,7 @@ StrRepeat(str, count){
 	return
 
 	8::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,8
 		else {
 			p := ClickAndLongClick()
@@ -3094,7 +3223,7 @@ StrRepeat(str, count){
 	return
 
 	9::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,9
 		else {
 			p := ClickAndLongClick()
@@ -3113,7 +3242,7 @@ StrRepeat(str, count){
 	return
 
 	0::
-		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() 
+		if !GV_TotalcmdToggleJumpByNumber or fun_TcExistHotMenu() or TC_Focus_Edit()
 			Sendinput,0
 		else {
 			p := ClickAndLongClick()
@@ -3177,6 +3306,18 @@ StrRepeat(str, count){
 		;send,{Enter}
 	;return
 
+	^+F2:: ;更新文件名中日期
+		SendInput,{F2}
+		Sleep,100
+		ControlGetText,OldName,TInEdit1,ahk_class TTOTAL_CMD
+		Sleep,100
+		NewName:= RegExReplace(OldName,"\d\d-\d\d-\d\d",fun_GetFormatTime("yy-MM-dd"))
+		Sleep,100
+		ControlSetText,TInEdit1,%NewName%
+		Sleep,100
+		SendInput,{Enter}
+	Return
+
 	;cm_OpenDirInNewTabOther中键点击，在对面新标签中打开
 	MButton::
 		Send,{Click}
@@ -3216,8 +3357,7 @@ StrRepeat(str, count){
 	;`:: GoSub,Sub_azHistory
 	;`:: Send,{Enter}
 	`:: Send,{Appskey}
-
-	!j:: GoSub,Sub_azHistory
+	!j::TC_azHistory()
 
 	;智能对话框跳转
 	!w::
@@ -3350,9 +3490,33 @@ StrPutVar(string, ByRef var, encoding)
 F1::Send,{F10}e
 }
 
+
+;wps中 {{{2
+;excel 2010: ahk_class bosa_sdm_XL9  excel2013: ahk_class XLMAIN ahk_exe C:\Windows\System32\Notepad.exe
+#IfWinActive ahk_Class QWidget ahk_exe wps.exe
+{
+	;复制单元格纯文本
+	!c:: 
+		send,{F2}
+		sleep,100
+		send,^+{Home}
+		sleep,100
+		send,^c{Esc}
+	return
+	;插入行
+	!1::send,!hrcer
+	;插入列
+	!2::send,!hrcec
+	;自动行高
+	![::send,!hrca
+	;自动列宽
+	!]::send,!hrci
+}
+
 ;excel中 {{{2
-;excel 2010: ahk_class bosa_sdm_XL9  excel2013: ahk_class XLMAIN ahk_exe C:\Windows\System32\Notepad.exe 
-#IfWinActive ahk_exe excel.exe 
+;excel 2010: ahk_class bosa_sdm_XL9  excel2013: ahk_class XLMAIN 
+;#IfWinActive ahk_exe excel.exe 
+#If WinActive("ahk_exe excel.exe") or WinActive("ahk_class XLMAIN")
 {
 	;复制单元格纯文本
 	!c:: send,{F2}^+{Home}^c{Esc}
@@ -3496,30 +3660,30 @@ EverythingChooseType(ft){
 #If WinActive("ahk_class IrfanView")
 {
 	;IrfanView自身支持ctrl+滚轮，但alt更好按，也不用多想到底哪一个按键
-	!WheelDown::send,{-}
-	!WheelUp::send,{+}
-	.:: send,{+}
-	,:: send,{-}
+	!WheelDown::send,{,}
+	!WheelUp::send,{.}
+	;.:: send,{+}
+	;,:: send,{-}
 
 
 	`;::send,{Esc}
 
 	y:: send,{PgDn}
 	;如果是动画，先按g暂停动画图片了后再按jk
-	j:: send,{PgDn}
-	k:: send,{PgUp}
+	;j:: send,{PgDn}
+	;k:: send,{PgUp}
 
 	x:: send,i
 	u:: send,{End}
 	i:: send,{Home}
-	/:: send,^h
-	\:: send,+f
+	;/:: send,^h
+	;\:: send,+f
 
 	c:: send,^c
 	!r:: send,{F2}
-	1:: send,!ofn{Enter}
-	4:: send,!ofd{Enter}
-	5:: send,!of{Up}{Enter}
+	;1:: send,!ofn{Enter}
+	;4:: send,!ofd{Enter}
+	;5:: send,!of{Up}{Enter}
 }
 
 #If WinActive("ahk_class IrfanViewThumbnails")
@@ -3530,6 +3694,24 @@ EverythingChooseType(ft){
 	l:: send,{Right}
 	x::ControlClick SysTreeView321
 }
+
+
+;SumatraPDF {{{2
+#if WinActive("ahk_class SUMATRA_PDF_FRAME")
+{
+	!e::
+		WinGetActiveTitle, title
+		Clipboard= % title
+		filenamenew := RegExReplace(Clipboard, "(.*(\.chm|\.pdf|\.epub)+).*","$1")
+		If RegExMatch(filenamenew, ".pdf$"){
+		Run, "FoxitReaderPortable.exe" "%filenamenew%", ..\, Max,
+		}
+		else If RegExMatch(filenamenew, ".chm$"){
+		Run, "hh.exe" "%filenamenew%", ..\, Max,
+		}
+	Return
+}
+
 
 
 ;快速目录切换 {{{2
@@ -3624,131 +3806,151 @@ return
 ;剪贴板增强
 ;固定文本条目增强
 ;#Persistent
-Sub_azHistory:
-
-    Global TC_azHistorySelect
-	;MaxItem := 36
-	MaxItem := 26
-
-	WinGet,exeName,ProcessName,A
-	WinGet,exeFullPath,ProcessPath,A
-	;D:\tools\totalcmd\TOTALCMD.EXE 正常多数是这种情况
-
-	if(SubStr(exeFullPath,2,2)!=":\")
-	{
-		WinGet,pid,PID,A
-		;\Device\RAMDriv\totalcmd\TOTALCMD.EXE 在内存盘上是
-		sql = Select * from Win32_Process WHERE ProcessId = %pid%
-		for process in ComObjGet("winmgmts:").ExecQuery(sql)
-		{
-			exeFullPath := process.CommandLine
-			;"Z:\totalcmd\TOTALCMD.EXE"
-		}
-		exeFullPath := SubStr(exeFullPath,2,StrLen(exeFullPath)-3)
-	}
-
-	StringLeft, tcPath, exeFullPath, StrLen(exeFullPath)-StrLen(exeName)-1
-
-	aTCINI = %tcPath%\wincmd.ini
-    If Strlen(aTCINI)
-    {
-		PostMessage, TC_Msg, CM_ConfigSaveDirHistory,0,, ahk_class TTOTAL_CMD
-        Sleep, 800
-        If Mod(TC_LeftRight(), 2)
-            Direct := "Left"
-        Else
-            Direct := "Right"
-
-		try{
-			;[LeftHistory]RedirectSection=%COMMANDER_PATH%\USER\HISTORY.INI
-			INIRead, aRSTCINI, %aTCINI%, %Direct%History, RedirectSection
-			;%COMMANDER_PATH%\USER\HISTORY.INI
-			if SubStr(aRSTCINI,2,14)=="COMMANDER_PATH"
-			{
-				HINI := % SubStr(aRSTCINI,17)
-				aTCINI = %tcPath%%HINI%
-			}
-		}
-		catch e{
-		}
-
-        INIRead, HistoryList, %aTCINI%, %Direct%History
-        arrHistory := StrSplit(HistoryList, "`n", "`r")
-        TC_azHistorySelect := {}
-        SplitPath, A_LineFile, , ScriptDir
-        ;IconFile := ScriptDir "\azHistory.icl"
-        Menu, TC_azHistory, UseErrorLevel
-        Menu, TC_azHistory, DeleteAll
-		if(arrHistory.MaxIndex()<MaxItem)
-			MaxItem := arrHistory.MaxIndex()
-        Loop % MaxItem
-        {
-			Value := RegExReplace(arrHistory[A_Index],"^\d\d?=")
-			IconNum := A_Index
-			Char := "[&" Chr(A_Index+64) "]"
-            TC_azHistorySelect[A_Index] := Value
-            Value := RegExReplace(Value, "::(\{[0-9a-zA-Z\-]*\})?\|")
-            Menu, TC_azHistory, Add, %Char%    %Value%, azHistory_Select
-        }
-        ControlGetFocus,TLB,ahk_class TTOTAL_CMD
-        ControlGetPos,xn,yn,wn,,%TLB%,ahk_class TTOTAL_CMD
-
-        Menu, TC_azHistory, Add, 关闭%A_Tab%[& ],TC_azHistory_DeleteAll
-		Menu, TC_azHistory, Show, %XN%, %YN%
-    }
-return
-
-TC_azHistory_DeleteAll:
-	Menu, TC_azHistory, DeleteAll
-return
-
-azHistory_Select:
-	Global TC_azHistorySelect
-    Value := TC_azHistorySelect[A_ThisMenuItemPos]
-    If RegExMatch(Value, "^::")
-    {
-        If RegExMatch(Value, "::\{20D04FE0\-3AEA\-1069\-A2D8\-08002B30309D\}")
-            Number := CM_OpenDrives
-        Else If RegExMatch(Value, "::(?!\{)")
-            Number := CM_OpenDesktop
-        Else If RegExMatch(Value, "::\{21EC2020\-3AEA\-1069\-A2DD\-08002B30309D\}\\::\{2227A280\-3AEA\-1069\-A2DE\-08002B30309D\}")
-		    Number := cm_OpenPrinters
-	    Else If RegExMatch(Value, "::\{F02C1A0D\-BE21\-4350\-88B0\-7367FC96EF3C\}")
-		    Number := cm_OpenNetwork
-        Else If RegExMatch(Value, "::\{26EE0668\-A00A\-44D7\-9371\-BEB064C98683\}\\0")
-		    Number := cm_OpenControls
-	    Else If RegExMatch(Value, "::\{645FF040\-5081\-101B\-9F08\-00AA002F954E\}")
-		    Number := cm_OpenRecycled
-        PostMessage, %TC_Msg%, %Number%, 0, , AHK_CLASS TTOTAL_CMD
-    }
-    Else
-    {
-        ThisMenuItem := RegExReplace(Value,"\t.*$")
-        WinGet, ExeName, ProcessName, ahk_class TTOTAL_CMD
-		ControlSetText, Edit1, cd %ThisMenuItem%, ahk_class TTOTAL_CMD
-		ControlSend, Edit1, {enter}, ahk_class TTOTAL_CMD
-    }
-return
-
-TC_LeftRight()
+TC_azHistory()
 {
-	Location := 0
-	ControlGetPos,x1,y1,,,%TCPanel1%,AHK_CLASS TTOTAL_CMD
-	If x1 > %y1%
-		location += 2
-	ControlGetFocus,TLB,ahk_class TTOTAL_CMD
-	ControlGetPos,x2,y2,wn,,%TLB%,ahk_class TTOTAL_CMD
-	If location
+	if RegExMatch(COMMANDER_EXE, "i)totalcmd64\.exe$")
 	{
-		If x1 > %x2%
-			location += 1
+		TCListBox := "LCLListBox"
+		TCEdit := "Edit2"
+		TInEdit := "TInEdit1"
+		TCPanel1 := "Window1"
+		TCPanel2 := "Window11"
+		TCPathPanel := "TPathPanel2"
 	}
-	Else
+	else
 	{
-		If y1 > %y2%
-			location += 1
+		TCListBox := "TMyListBox"
+		TCEdit := "Edit1"
+		TInEdit := "TInEdit1"
+		TCPanel1 := "TPanel1"
+		TCPanel2 := "TMyPanel8"
+		TCPathPanel := "TPathPanel1"
 	}
-	Return location
+
+	;<cm_ConfigSaveDirHistory>
+	TcSendPos(582)
+	sleep, 200
+	history := ""
+	TCINI := COMMANDER_PATH . "\wincmd.ini"
+	;msgbox % TCINI
+	tcLeftRight := fun_TcGet(1000)
+	;msgbox % tcLeftRight
+	if tcLeftRight = 1
+	{
+		IniRead, history, %TCINI%, LeftHistory
+		if RegExMatch(history, "RedirectSection=(.+)", HistoryRedirect)
+		{			
+			StringReplace, HistoryRedirect1, HistoryRedirect1, `%COMMANDER_PATH`%, %COMMANDER_PATH%
+			IniRead, history, %HistoryRedirect1%, LeftHistory			
+		}
+	}
+	else if tcLeftRight = 2
+	{
+		IniRead, history, %TCINI%, RightHistory
+		if RegExMatch(history, "RedirectSection=(.+)", HistoryRedirect)
+		{
+			StringReplace, HistoryRedirect1, HistoryRedirect1, `%COMMANDER_PATH`%, %COMMANDER_PATH%
+			IniRead, history, %HistoryRedirect1%, RightHistory
+		}
+	}
+	history_obj := []
+	Global history_name_obj := []
+	;Loop, Parse, history, `n
+		;max := A_index
+	Loop, Parse, history, `n
+	{
+		idx := RegExReplace(A_LoopField, "=.*$")
+		value := RegExReplace(A_LoopField, "^\d\d?=")
+		;避免&被识别成快捷键
+		value := RegExReplace(value, "\t.*$")
+		name := StrReplace(value, "&", ":＆:")
+
+		if RegExMatch(Value, "::\{20D04FE0\-3AEA\-1069\-A2D8\-08002B30309D\}\|")
+		{
+			name  := RegExReplace(Value, "::\{20D04FE0\-3AEA\-1069\-A2D8\-08002B30309D\}\|")
+			value := 2122
+		}
+		if RegExMatch(Value, "::\|")
+		{
+			name  := RegExReplace(Value, "::\|")
+			value := 2121
+		}
+		if RegExMatch(Value, "::\{21EC2020\-3AEA\-1069\-A2DD\-08002B30309D\}\\::\{2227A280\-3AEA\-1069\-A2DE\-08002B30309D\}\|")
+		{
+			name  :=  RegExReplace(Value, "::\{21EC2020\-3AEA\-1069\-A2DD\-08002B30309D\}\\::\{2227A280\-3AEA\-1069\-A2DE\-08002B30309D\}\|")
+			value := 2126
+		}
+		if RegExMatch(Value, "::\{208D2C60\-3AEA\-1069\-A2D7\-08002B30309D\}\|") ;NothingIsBig的是XP系统，网上邻居是这个调整
+		{
+			name := RegExReplace(Value, "::\{208D2C60\-3AEA\-1069\-A2D7\-08002B30309D\}\|")
+			value := 2125
+		}
+		if RegExMatch(Value, "::\{F02C1A0D\-BE21\-4350\-88B0\-7367FC96EF3C\}\|")
+		{
+			name := RegExReplace(Value, "::\{F02C1A0D\-BE21\-4350\-88B0\-7367FC96EF3C\}\|")
+			value := 2125
+		}
+		if RegExMatch(Value, "::\{26EE0668\-A00A\-44D7\-9371\-BEB064C98683\}\\0\|")
+		{
+			name := RegExReplace(Value, "::\{26EE0668\-A00A\-44D7\-9371\-BEB064C98683\}\\0\|")
+			value := 2123
+		}
+		if RegExMatch(Value, "::\{645FF040\-5081\-101B\-9F08\-00AA002F954E\}\|")
+		{
+			name := RegExReplace(Value, "::\{645FF040\-5081\-101B\-9F08\-00AA002F954E\}\|")
+			value := 2127
+		}
+		name := "&" . chr(idx+65) . "    " . name
+		history_obj[idx] := name
+		history_name_obj[name] := value
+	}
+	Menu, az, UseErrorLevel
+	Menu, az, add
+	Menu, az, deleteall
+	MaxItem := 26
+	Loop, %MaxItem%
+	{
+		idx := A_Index - 1
+		name := history_obj[idx]
+		Menu, az, Add, %name%, azHistorySelect
+	}
+	Menu, az, Add, [& ]    关闭,azHistoryDeleteAll
+	ControlGetFocus, TLB, ahk_class TTOTAL_CMD
+	ControlGetPos, xn, yn, wn, , %TLB%, ahk_class TTOTAL_CMD
+	Menu, az, show, %xn%, %yn%
+}
+
+azHistoryDeleteAll:
+	Menu, az, DeleteAll
+return
+
+azHistorySelect:
+	azHistorySelect()
+return
+
+azHistorySelect()
+{
+	Global history_name_obj
+	if ( history_name_obj[A_ThisMenuItem] = 2122 ) or RegExMatch(A_ThisMenuItem, "::\{20D04FE0\-3AEA\-1069\-A2D8\-08002B30309D\}")
+		TcSendPos(cm_OpenDrives)
+	else if ( history_name_obj[A_ThisMenuItem] = 2121 ) or RegExMatch(A_ThisMenuItem, "::(?!\{)")
+		TcSendPos(cm_OpenDesktop)
+	else if ( history_name_obj[A_ThisMenuItem] = 2126 ) or RegExMatch(A_ThisMenuItem, "::\{21EC2020\-3AEA\-1069\-A2DD\-08002B30309D\}\\::\{2227A280\-3AEA\-1069\-A2DE\-08002B30309D\}")
+		TcSendPos(cm_OpenPrinters)
+	else if ( history_name_obj[A_ThisMenuItem] = 2125 ) or RegExMatch(A_ThisMenuItem, "::\{F02C1A0D\-BE21\-4350\-88B0\-7367FC96EF3C\}") or RegExMatch(A_ThisMenuItem, "::\{208D2C60\-3AEA\-1069\-A2D7\-08002B30309D\}\|") ;NothingIsBig的是XP系统，网上邻居是这个调整
+		TcSendPos(cm_OpenNetwork)
+	else if ( history_name_obj[A_ThisMenuItem] = 2127 ) or RegExMatch(A_ThisMenuItem, "::\{645FF040\-5081\-101B\-9F08\-00AA002F954E\}")
+		TcSendPos(cm_OpenRecycled)
+	else
+	{
+		ThisMenuItem := StrReplace(A_ThisMenuItem, ":＆:", "&")
+		ThisMenuItem := RegExReplace(ThisMenuItem, "^&[A-Z]    ")
+		TcSendPos(CM_EditPath)
+		sleep,300
+		ControlSetText, %TInEdit%, %ThisMenuItem%, ahk_class TTOTAL_CMD
+		sleep,300
+		ControlSend, %TInEdit%, {enter}, ahk_class TTOTAL_CMD
+	}
 }
 
 MenuHandler:
@@ -3765,7 +3967,6 @@ CreatTrayMenu:
 	Menu,Tray,add
 	Menu,Tray,add,开启或关闭随系统自动启动,Menu_AutoStart
 	Menu,Tray,add,添加或去除绿软SoftDir变量,Menu_SoftDir
-	Menu,Tray,add
 	Menu,Tray,add,拾遗补缺的绿化,Menu_GreenPath
 	Menu,Tray,add
 	Menu,Tray,add,重启脚本(&R),Menu_Reload
@@ -3790,12 +3991,12 @@ Menu_Debug:
 return
 
 Menu_Document:
-	;run,hh.exe %A_ScriptDir%\AutoHotkey.chm
-	run,https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm
+	run,hh.exe %A_ScriptDir%\AutoHotkey.chm
+	;run,https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm
 return
 
 Menu_Reload:
-	Gosub,SelfReload
+	Gosub,ForceSelfReload
 return
 
 Menu_AutoStart:
@@ -3830,10 +4031,28 @@ Menu_SoftDir:
 	}
 return
 
+;Menu_RightMenu:
+	;if A_Is64bitOS 
+		;SetRegView 64
+	;RegRead, OutputVar, HKEY_LOCAL_MACHINE, SYSTEM\CurrentControlSet\Control\Session Manager\Environment, SoftDir
+	;if OutputVar
+	;{
+		;RegDelete, HKEY_LOCAL_MACHINE, SYSTEM\CurrentControlSet\Control\Session Manager\Environment, SoftDir
+		;eztip("已去掉SoftDir环境变量",10)
+	;}
+	;else
+	;{
+		;RegWrite, REG_SZ, HKEY_LOCAL_MACHINE, SYSTEM\CurrentControlSet\Control\Session Manager\Environment, SoftDir, %SOFTDIR%
+		;eztip("已添加SoftDir环境变量",10)
+	;}
+;return
+
+
 Menu_GreenPath:
 	;1、newfile中的模板，Tools\NewFiles\NewFiles.ini
 	p := A_scriptDir . "\Tools\NewFiles\Templates"
 	IniWrite, %p%,  %A_scriptDir%\Tools\NewFiles\NewFiles.ini, FileList,TemplatePath
+
 	;2、everything的Everything.ini
 	p := "$exec(""" . A_scriptDir . "\" . COMMANDER_NAME . """ /A /T /O /S /L=""%1"")"
 	IniWrite, %p%,  %A_scriptDir%\Everything.ini, Everything,open_folder_command2
@@ -3842,6 +4061,9 @@ Menu_GreenPath:
 	IniWrite, %p%,  %A_scriptDir%\Everything.ini, Everything,explore_command2
 	IniWrite, %p%,  %A_scriptDir%\Everything.ini, Everything,explore_path_command2
 
+	;3、tcmatch.ini
+	p := "Long description@" . A_scriptDir . "\Plugins\WDX\FileDiz\FileDiz.wdx"
+	IniWrite, %p%,  %A_scriptDir%\tcmatch.ini, wdx, wdx_text_plugin3
 return
 
 Menu_Suspend:
